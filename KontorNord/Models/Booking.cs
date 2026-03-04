@@ -1,7 +1,9 @@
 ﻿using System;
 namespace KontorNord.Models
 {
-	public class Booking
+
+    // Class representing a booking in the system - contains properties for the booking's ID, associated meeting room, start and end times, who booked it, and an optional note
+    public class Booking
 	{
 		public int Id { get; set; }
 
