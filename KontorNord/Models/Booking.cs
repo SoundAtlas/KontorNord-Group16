@@ -1,10 +1,18 @@
 ﻿using System;
 namespace KontorNord.Models
 {
-	public class Class1
+	public class Booking
 	{
-		public Class1()
-		{
-		}
-	}
+		public int Id { get; set; }
+
+		public int MeetingRoomId { get; set; }
+
+		public DateTime Start { get; set; }
+
+		public DateTime End { get; set; }
+
+		public string BookedBy { get; set; } = string.Empty;
+
+		public string? Note { get; set; }
+    }
 }

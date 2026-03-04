@@ -1,10 +1,9 @@
 ﻿using System;
 namespace KontorNord.Models
 {
-    public class Class1
+    public class MeetingRoom
     {
-        public Class1()
-        {
-        }
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }
