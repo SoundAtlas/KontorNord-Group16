@@ -7,7 +7,7 @@ namespace KontorNord.Models
 	{
 		public int Id { get; set; }
 
-		public int MeetingRoomId { get; set; }
+		public int RoomId { get; set; }
 
 		public DateTime Start { get; set; }
 
