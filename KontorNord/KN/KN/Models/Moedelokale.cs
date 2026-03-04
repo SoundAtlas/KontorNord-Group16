@@ -8,6 +8,5 @@ namespace KN.Models
     {
         public int moedelokaleId;
         public string navn = "";
-        public string kapacitet = "";
     }
 }
