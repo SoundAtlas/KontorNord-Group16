@@ -54,10 +54,9 @@ namespace KontorNord
             static void ShowBookings(BookingService bookingService, List<MeetingRoom> rooms)
             {
                 bookingService.RemoveExpiredBookings();
+                var bookings = bookingService.GetAllBookings();
 
                 Console.WriteLine("\n--- Bookinger ---");
-
-                var bookings = bookingService.GetAllBookings();
 
 
                 if (bookings.Count == 0)
@@ -123,12 +122,12 @@ namespace KontorNord
                     BookedBy = bookedBy
                 };
 
-                bool success = bookingService.TryAddBooking(booking);
+                bool success = bookingService.TryAddBooking(booking, out string errorMessage);
 
                 if (success)
                     Console.WriteLine("Booking oprettet!");
                 else
-                    Console.WriteLine("Konflikt! Lokalet er allerede booket.");
+                    Console.WriteLine(errorMessage);
 
                 ShowBookings(bookingService, rooms);
 
@@ -138,9 +137,9 @@ namespace KontorNord
             static void DeleteBooking(BookingService bookingService, List<MeetingRoom> rooms)
             {
                 bookingService.RemoveExpiredBookings();
-                Console.WriteLine("\n--- Slet Booking ---");
-
                 var bookings = bookingService.GetAllBookings();
+
+                Console.WriteLine("\n--- Slet Booking ---");
 
                 if (bookings.Count == 0)
                 {

@@ -10,13 +10,27 @@ namespace KontorNord.Services
         private int _nextId = 1; // Counter for booking IDs
 
         // Adds a new booking 		
-        public bool TryAddBooking(Booking booking)
+        public bool TryAddBooking(Booking booking, out string errorMessage)
         {
+            errorMessage = string.Empty;
+
             if (booking.End <= booking.Start) // Validate that end time is after start time
+            {
+                errorMessage = "Slut tid skal være efter start tid.";
                 return false;
+            }
+
+            if (booking.Start < DateTime.Now) // Validate that start time is in the future
+            {
+                errorMessage = "Booking skal være i fremtiden.";
+                return false;
+            }
 
             if (HasConflict(booking))
+            {
+                errorMessage = "Konflikt! Lokalet er allerede booket.";
                 return false;
+            }
 
             booking.Id = _nextId++; // Assign unique ID
             _bookings.Add(booking);
@@ -74,6 +88,9 @@ namespace KontorNord.Services
 
             return null; // Return null if no booking with the specified ID is found
         }
+
+
+
 
 
         // Removes expired bookings
