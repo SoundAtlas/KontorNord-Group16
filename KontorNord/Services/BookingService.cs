@@ -1,11 +1,13 @@
 ﻿using KontorNord.Models;
+using System.Text.Json;
+
 
 namespace KontorNord.Services
 {
     // Class responsible for managing bookings in the system - stores bookings and provides methods to add and retrieve bookings
     public class BookingService
     {
-
+        private string _filePath = "bookings.json"; // Path to the file where bookings are stored
         private List<Booking> _bookings = new(); // list that stores bookings
         private int _nextId = 1; // Counter for booking IDs
 
@@ -89,10 +91,6 @@ namespace KontorNord.Services
             return null; // Return null if no booking with the specified ID is found
         }
 
-
-
-
-
         // Removes expired bookings
 
         public void RemoveExpiredBookings()
@@ -104,6 +102,39 @@ namespace KontorNord.Services
                     _bookings.RemoveAt(i); // Remove expired booking
             }
             _bookings.RemoveAll(b => b.End < now); // Remove bookings that have already ended
+        }
+
+        public void SaveToFile()
+        {
+            string json = JsonSerializer.Serialize(_bookings);
+            File.WriteAllText(_filePath, json);
+        }
+
+        public void LoadFromFile()
+        {
+            if (!File.Exists(_filePath))
+            {
+                return; // No file to load, start with an empty list
+            }
+
+            string json = File.ReadAllText(_filePath);
+
+            List<Booking>? loadedBookings = JsonSerializer.Deserialize<List<Booking>>(json);
+
+            if (loadedBookings != null)
+            {
+                _bookings = loadedBookings;
+            }
+
+            _nextId = 1;
+
+            foreach (var b in _bookings)
+            {
+                if (b.Id >= _nextId)
+                {
+                    _nextId = b.Id + 1;
+                }
+            }
         }
     }
 }

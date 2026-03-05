@@ -18,6 +18,8 @@ namespace KontorNord
 
             var bookingService = new BookingService();
 
+            bookingService.LoadFromFile();
+
 
             // --- Main Menu Loop ---
 
@@ -27,8 +29,7 @@ namespace KontorNord
                 Console.WriteLine("\n === KontorNord Booking System ===");
                 Console.WriteLine("1) Opret booking");
                 Console.WriteLine("2) Se bookinger");
-                Console.WriteLine("3) Rediger booking");
-                Console.WriteLine("4) Slet booking");
+                Console.WriteLine("3) Slet booking");
                 Console.WriteLine("0) Exit");
                 Console.Write("> ");
 
@@ -42,8 +43,6 @@ namespace KontorNord
                 else if (choice == "2")
                     ShowBookings(bookingService, rooms);
                 else if (choice == "3")
-                    Console.WriteLine("Rediger booking - ikke implementeret endnu.");
-                else if (choice == "4")
                     DeleteBooking(bookingService, rooms);
                 else
                     Console.WriteLine("Ugyldigt valg, prøv igen.");
@@ -125,7 +124,10 @@ namespace KontorNord
                 bool success = bookingService.TryAddBooking(booking, out string errorMessage);
 
                 if (success)
+                {
                     Console.WriteLine("Booking oprettet!");
+                    bookingService.SaveToFile();
+                }
                 else
                     Console.WriteLine(errorMessage);
 
@@ -196,7 +198,10 @@ namespace KontorNord
                 bool deleted = bookingService.DeleteBooking(id);
 
                 if (deleted)
+                {
                     Console.WriteLine("Booking slettet!");
+                    bookingService.SaveToFile();
+                }
                 else
                     Console.WriteLine("Booking med det Id blev ikke fundet");
 
