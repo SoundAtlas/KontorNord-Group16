@@ -27,6 +27,8 @@ namespace KontorNord
                 Console.WriteLine("\n === KontorNord Booking System ===");
                 Console.WriteLine("1) Opret booking");
                 Console.WriteLine("2) Se bookinger");
+                Console.WriteLine("3) Rediger booking");
+                Console.WriteLine("4) Slet booking");
                 Console.WriteLine("0) Exit");
                 Console.Write("> ");
 
@@ -39,6 +41,10 @@ namespace KontorNord
                     CreateBooking(bookingService, rooms);
                 else if (choice == "2")
                     ShowBookings(bookingService, rooms);
+                else if (choice == "3")
+                    Console.WriteLine("Rediger booking - ikke implementeret endnu.");
+                else if (choice == "4")
+                    DeleteBooking(bookingService, rooms);
                 else
                     Console.WriteLine("Ugyldigt valg, prøv igen.");
             }
@@ -80,6 +86,7 @@ namespace KontorNord
 
                     Console.WriteLine($"[{b.Id}] {b.Start:dd-MM-yyyy HH:mm} - {b.End:HH:mm} | {roomName} | {b.BookedBy}");
                 }
+
                 Pause();
             }
 
@@ -112,10 +119,64 @@ namespace KontorNord
                     BookedBy = bookedBy
                 };
 
-                bookingService.AddBooking(booking);
-                Console.WriteLine("Booking oprettet!");
+                bool success = bookingService.TryAddBooking(booking);
+
+                if (success)
+                    Console.WriteLine("Booking oprettet!");
+                else
+                    Console.WriteLine("Konflikt! Lokalet er allerede booket.");
+
                 ShowBookings(bookingService, rooms);
 
+            }
+
+            static void DeleteBooking(BookingService bookingService, List<MeetingRoom> rooms)
+            {
+                Console.WriteLine("\n--- Slet Booking ---");
+
+                var bookings = bookingService.GetAllBookings();
+
+                if (bookings.Count == 0)
+                {
+                    Console.WriteLine("Ingen bookinger fundet.");
+                    Pause();
+                    return;
+                }
+
+                foreach (var b in bookings)
+                {
+                    string roomName = "";
+
+                    // Find room name for booking
+                    foreach (var r in rooms)
+                    {
+                        if (r.Id == b.RoomId)
+                        {
+                            roomName = r.Name;
+                            break;
+                        }
+                    }
+
+                    // Print booking info
+                    Console.WriteLine($"[{b.Id}] {b.Start:dd-MM-yyyy HH:mm} - {b.End:HH:mm} | {roomName} | {b.BookedBy}");
+                }
+
+                int id = ReadInt("Indtast ID for den booking du vil slette: ", 1, 9999);
+
+                string answer = ReadNonEmptyString("Er du sikker? (j/n): ").ToLower();
+
+
+                if (answer != "j")
+                    return;
+
+                bool deleted = bookingService.DeleteBooking(id);
+
+                if (deleted)
+                    Console.WriteLine("Booking slettet!");
+                else
+                    Console.WriteLine("Booking med det Id blev ikke fundet");
+
+                Pause();
             }
 
             // --- Input validation methods ---
