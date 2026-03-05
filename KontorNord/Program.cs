@@ -33,7 +33,7 @@ namespace KontorNord
                 string? choice = Console.ReadLine();
 
                 if (choice == "0")
-                   break;
+                    break;
 
                 if (choice == "1")
                     CreateBooking(bookingService, rooms);
@@ -53,13 +53,32 @@ namespace KontorNord
 
                 if (bookings.Count == 0)
                 {
+
                     Console.WriteLine("Ingen bookinger fundet.");
+                    Pause();
                     return;
                 }
 
-                foreach (var b in bookings.OrderBy(b => b.Start))
+                // sort by date
+                var sortedBookings = bookings.OrderBy(b => b.Start);
+
+                // Print bookings
+                foreach (var b in sortedBookings)
                 {
-                    string roomName = rooms.First(r => r.Id == b.RoomId).Name;
+                    string roomName = "";
+
+                    // Find room name for booking
+                    foreach (var r in rooms)
+                    {
+                        if (r.Id == b.RoomId)
+                        {
+                            roomName = r.Name;
+                            break;
+                        }
+                    }
+
+                    // Print booking info
+
                     Console.WriteLine($"[{b.Id}] {b.Start:dd-MM-yyyy HH:mm} - {b.End:HH:mm} | {roomName} | {b.BookedBy}");
                 }
                 Pause();
@@ -74,7 +93,7 @@ namespace KontorNord
                 Console.WriteLine("Vælg lokale:");
                 foreach (var r in rooms)
                     Console.WriteLine($"{r.Id}) {r.Name}");
-                
+
 
                 int roomId = ReadInt("> ", 1, 3);
 
@@ -97,9 +116,9 @@ namespace KontorNord
                 bookingService.AddBooking(booking);
                 Console.WriteLine("Booking oprettet!");
                 ShowBookings(bookingService, rooms);
-                
+
             }
-            
+
             // --- Input validation methods ---
 
             static int ReadInt(string message, int min, int max)
@@ -156,8 +175,8 @@ namespace KontorNord
 
             static void Pause()
             {
-            Console.Write("\n\nTryk på en vilkårlig tast for at returnere til menu...");
-            Console.ReadKey();
+                Console.Write("\n\nTryk på en vilkårlig tast for at returnere til menu...");
+                Console.ReadKey();
             }
 
         }
