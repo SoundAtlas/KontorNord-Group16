@@ -7,7 +7,7 @@ namespace KontorNord
     {
         static void Main()
         {
-            // Setup: rooms + service
+            // Setup: create rooms + service objects
 
             var rooms = new List<MeetingRoom>
             {
@@ -57,6 +57,7 @@ namespace KontorNord
 
                 Console.WriteLine("\n--- Bookinger ---");
 
+
                 if (bookings.Count == 0)
                 {
                     Console.WriteLine("Ingen bookinger fundet.");
@@ -83,7 +84,6 @@ namespace KontorNord
                     }
 
                     // Print booking info
-
                     Console.WriteLine($"[{b.Id}] {b.Start:dd-MM-yyyy HH:mm} - {b.End:HH:mm} | {roomName} | {b.BookedBy}");
                 }
 
@@ -130,6 +130,7 @@ namespace KontorNord
 
             }
 
+
             static void DeleteBooking(BookingService bookingService, List<MeetingRoom> rooms)
             {
                 Console.WriteLine("\n--- Slet Booking ---");
@@ -161,7 +162,32 @@ namespace KontorNord
                     Console.WriteLine($"[{b.Id}] {b.Start:dd-MM-yyyy HH:mm} - {b.End:HH:mm} | {roomName} | {b.BookedBy}");
                 }
 
-                int id = ReadInt("Indtast ID for den booking du vil slette: ", 1, 9999);
+                int id;
+
+                while (true)
+                {
+
+
+
+                    id = ReadInt("\nIndtast ID for den booking du vil slette: ", 1, 9999);
+
+                    bool exists = false;
+
+
+                    foreach (var b in bookings)
+                    {
+                        if (b.Id == id)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if (exists)
+                        break;
+
+                    Console.WriteLine("Booking med det Id blev ikke fundet. Prøv igen.");
+                }
 
                 string answer = ReadNonEmptyString("Er du sikker? (j/n): ").ToLower();
 
