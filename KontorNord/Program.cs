@@ -26,7 +26,7 @@ namespace KontorNord
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("\n === KontorNord Booking System ===");
+                Console.WriteLine(" === KontorNord Booking System ===");
                 Console.WriteLine("1) Opret booking");
                 Console.WriteLine("2) Se bookinger");
                 Console.WriteLine("3) Slet booking");

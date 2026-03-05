@@ -110,6 +110,7 @@ namespace KontorNord.Services
             File.WriteAllText(_filePath, json);
         }
 
+
         public void LoadFromFile()
         {
             if (!File.Exists(_filePath))
