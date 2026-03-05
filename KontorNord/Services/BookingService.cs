@@ -26,7 +26,7 @@ namespace KontorNord.Services
         // Returns all bookings currently stored
         public List<Booking> GetAllBookings()
         {
-            return _bookings;
+            return new List<Booking>(_bookings); // Return a copy of the bookings list to prevent external modification
         }
 
         // Checks for conflicts with stored bookings
