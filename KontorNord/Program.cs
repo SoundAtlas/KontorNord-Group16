@@ -53,7 +53,6 @@ namespace KontorNord
 
                 if (bookings.Count == 0)
                 {
-
                     Console.WriteLine("Ingen bookinger fundet.");
                     Pause();
                     return;
