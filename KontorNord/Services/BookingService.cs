@@ -48,29 +48,31 @@ namespace KontorNord.Services
             return false; // No conflicts found
         }
 
+        // Deletes a booking by its ID, returns true if successful, false if not found
         public bool DeleteBooking(int id)
         {
-            Booking? toDelete = null;
+            Booking? booking = GetBookingById(id);
+            {
+                if (booking == null)
+                    return false;
 
-            // Find the booking with the specified ID
+                _bookings.Remove(booking);
+                return true;
+            }
+
+
+        }
+
+        // Retrieves a booking by its ID, returns null if not found
+        public Booking? GetBookingById(int id)
+        {
             foreach (var b in _bookings)
             {
                 if (b.Id == id)
-                {
-                    toDelete = b;
-                    break;
-                }
+                    return b; // Return the booking if found
             }
 
-            // If no booking with the specified ID is found, return false
-            if (toDelete == null)
-                return false;
-
-            // Remove the found booking from the list
-            _bookings.Remove(toDelete);
-            return true;
-
-
+            return null; // Return null if no booking with the specified ID is found
         }
     }
 }

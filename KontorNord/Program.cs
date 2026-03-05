@@ -166,27 +166,17 @@ namespace KontorNord
 
                 while (true)
                 {
-
-
-
                     id = ReadInt("\nIndtast ID for den booking du vil slette: ", 1, 9999);
 
-                    bool exists = false;
+                    Booking? booking = bookingService.GetBookingById(id);
 
-
-                    foreach (var b in bookings)
+                    if (booking == null)
                     {
-                        if (b.Id == id)
-                        {
-                            exists = true;
-                            break;
-                        }
+                        Console.WriteLine("Booking med det Id blev ikke fundet. Prøv igen.");
+                        continue;
                     }
 
-                    if (exists)
-                        break;
-
-                    Console.WriteLine("Booking med det Id blev ikke fundet. Prøv igen.");
+                    break;
                 }
 
                 string answer = ReadNonEmptyString("Er du sikker? (j/n): ").ToLower();
