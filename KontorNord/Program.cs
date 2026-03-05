@@ -53,9 +53,11 @@ namespace KontorNord
 
             static void ShowBookings(BookingService bookingService, List<MeetingRoom> rooms)
             {
-                var bookings = bookingService.GetAllBookings();
+                bookingService.RemoveExpiredBookings();
 
                 Console.WriteLine("\n--- Bookinger ---");
+
+                var bookings = bookingService.GetAllBookings();
 
 
                 if (bookings.Count == 0)
@@ -93,6 +95,8 @@ namespace KontorNord
             // Creates a booking from user input
             static void CreateBooking(BookingService bookingService, List<MeetingRoom> rooms)
             {
+                bookingService.RemoveExpiredBookings();
+
                 Console.WriteLine("\n--- Opret Booking ---");
 
                 // Show rooms
@@ -133,6 +137,7 @@ namespace KontorNord
 
             static void DeleteBooking(BookingService bookingService, List<MeetingRoom> rooms)
             {
+                bookingService.RemoveExpiredBookings();
                 Console.WriteLine("\n--- Slet Booking ---");
 
                 var bookings = bookingService.GetAllBookings();

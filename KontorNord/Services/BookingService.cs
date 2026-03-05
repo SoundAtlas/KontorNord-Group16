@@ -74,5 +74,19 @@ namespace KontorNord.Services
 
             return null; // Return null if no booking with the specified ID is found
         }
+
+
+        // Removes expired bookings
+
+        public void RemoveExpiredBookings()
+        {
+            DateTime now = DateTime.Now;
+            for (int i = _bookings.Count - 1; i >= 0; i--) // 
+            {
+                if (_bookings[i].End < now) // Check if the booking has already ended
+                    _bookings.RemoveAt(i); // Remove expired booking
+            }
+            _bookings.RemoveAll(b => b.End < now); // Remove bookings that have already ended
+        }
     }
 }
