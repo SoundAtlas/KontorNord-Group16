@@ -167,7 +167,11 @@ namespace KontorNord
 
 
                 if (answer != "j")
+                {
+                    Console.WriteLine("Sletning annulleret.");
+                    Pause();
                     return;
+                }
 
                 bool deleted = bookingService.DeleteBooking(id);
 
