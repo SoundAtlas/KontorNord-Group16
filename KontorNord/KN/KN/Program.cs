@@ -29,6 +29,14 @@ namespace KN
             }
         }
 
+        static void FlushKeyBuffer()
+        {
+            while (Console.KeyAvailable)
+            {
+                Console.ReadKey(true);
+            }
+        }
+
         static int ChooseFromList(string title, string[] options)
         {
             int selected = 0;
@@ -116,6 +124,7 @@ namespace KN
             Console.CursorVisible = false;
             Thread.Sleep(milliseconds);
             Console.Clear();
+            FlushKeyBuffer();
 
         }
 
