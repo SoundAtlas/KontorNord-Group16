@@ -1,5 +1,6 @@
 ﻿using KN.Models;
 using KN.Services;
+using System.Data;
 
 namespace KN
 {
@@ -138,12 +139,25 @@ namespace KN
                 options[i] = $"{medarbejdere[i].medarbejderId}. {medarbejdere[i].navn}";
             }
 
-            int selectedIndex = ChooseFromList("Vaelg medarbejder", options);
+            int selectedIndex = ChooseFromList("VAELG MEDARBEJDER:", options);
            
             return medarbejdere[selectedIndex];
 
         }
 
+        static Moedelokale MoedelokaleSelection(BookingSystem system)
+        {
+            List<Moedelokale> moedelokaler = system.GetMoedelokaler();
+            string[] options = new string[moedelokaler.Count];
+
+            for (int i = 0; i < moedelokaler.Count; i++)
+            {
+                options[i] = $"{moedelokaler[i].moedelokaleId}. {moedelokaler[i].navn}";
+            }
+
+            int selectedIndex = ChooseFromList("VAELG MOEDELOKALE:", options);
+            return moedelokaler[selectedIndex];
+        }
 
         static void MenuMain(BookingSystem system)
         {
@@ -170,7 +184,11 @@ namespace KN
 
                 else if (choice == 1)
                 {
-
+                    Moedelokale m = MoedelokaleSelection(system);
+                    
+                    Console.Clear();
+                    Console.WriteLine($"{m.navn}");
+                    Console.ReadKey();
                 }
 
                 else if (choice == 2)
