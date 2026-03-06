@@ -175,19 +175,44 @@ namespace KN
 
                 if (choice == 0)
                 {
-                    Medarbejder m = MedarbejderSelection(system);
+                   while (true) 
+                    {
+                    
+                    Medarbejder valgtMedarbejder = MedarbejderSelection(system);
 
                     Console.Clear();
-                    Console.WriteLine($"{m.navn}");
-                    Console.ReadKey();
+                    Console.WriteLine($"{valgtMedarbejder.navn}");
+                    
+                        Console.Clear();
+                    
+                    string[] medarbejderConfirmation =
+                    {
+                        "JA",
+                        "NEJ",
+                    };
+                    
+                    
+                        int choiceConfirm = ChooseFromList($"MEDARBEJDER: {valgtMedarbejder.navn}\n\nBEKRAEFT?", medarbejderConfirmation);
+
+                        if (choiceConfirm == 0)
+                        {
+                            Moedelokale valgtMoedelokale = MoedelokaleSelection(system);
+
+                            break;
+                        }
+                        else if (choiceConfirm == 1)
+                        {
+                            continue;
+                        }
+                    }
                 }
 
                 else if (choice == 1)
                 {
-                    Moedelokale m = MoedelokaleSelection(system);
+                    Moedelokale valgtMoedelokale = MoedelokaleSelection(system);
                     
                     Console.Clear();
-                    Console.WriteLine($"{m.navn}");
+                    Console.WriteLine($"{valgtMoedelokale.navn}");
                     Console.ReadKey();
                 }
 
