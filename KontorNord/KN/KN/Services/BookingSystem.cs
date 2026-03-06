@@ -79,6 +79,11 @@ namespace KN.Services
             canopus.navn = "Canopus";
             moedelokaler.Add(canopus);
         }
+
+        public List<Medarbejder> GetMedarbejdere()
+        {
+            return medarbejdere; 
+        }
     
         public List<Moedelokale> GetMoedelokaler()
         {

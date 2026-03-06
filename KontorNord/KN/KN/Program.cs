@@ -8,10 +8,11 @@ namespace KN
         static void Main(string[] args)
         {
             ShowTitleScreen(4000);
-            
+
             BookingSystem system = new BookingSystem();
-            
+
             MenuMain(system);
+
         }
 
         static void RenderCenteredBlock(string[] lines)
@@ -25,6 +26,65 @@ namespace KN
                 int y = startY + i;
                 Console.SetCursorPosition(x, y);
                 Console.WriteLine(lines[i]);
+            }
+        }
+
+        static int ChooseFromList(string title, string[] options)
+        {
+            int selected = 0;
+
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine(title + "\n");
+
+                for (int i = 0; i < options.Length; i++)
+                {
+                    if (i == selected)
+                    {
+                        Console.WriteLine($"> {options[i]} <");
+                    }
+                    else
+                    {
+                        Console.WriteLine($" {options[i]} ");
+
+                    }
+                }
+
+                var key = Console.ReadKey(true).Key;
+                int lastIndex = options.Length - 1;
+
+                if (key == ConsoleKey.UpArrow)
+                {
+                    selected--;
+
+                    if (selected < 0)
+                    {
+                        selected = lastIndex;
+                    }
+
+
+                }
+
+                if (key == ConsoleKey.DownArrow)
+                {
+                    selected++;
+
+                    if (selected > lastIndex)
+                    {
+                        selected = 0;
+                    }
+                }
+
+                if (key == ConsoleKey.Enter)
+                {
+                    return selected;
+                }
+
+                
+
+
+
             }
         }
 
@@ -50,7 +110,7 @@ namespace KN
                 @$"║                                                                               ║",
                 @$"╚═══════════════════════════════════════════════════════════════════════════════╝",
 
-            };
+                    };
 
             RenderCenteredBlock(titleScreen);
             Console.CursorVisible = false;
@@ -59,46 +119,63 @@ namespace KN
 
         }
 
+        static Medarbejder MedarbejderSelection(BookingSystem system)
+        {
+            List<Medarbejder> medarbejdere = system.GetMedarbejdere();
+            string[] options = new string[medarbejdere.Count];
+
+            for (int i = 0; i < medarbejdere.Count; i++)
+            {
+                options[i] = $"{medarbejdere[i].medarbejderId}. {medarbejdere[i].navn}";
+            }
+
+            int selectedIndex = ChooseFromList("Vaelg medarbejder", options);
+           
+            return medarbejdere[selectedIndex];
+
+        }
+
+
         static void MenuMain(BookingSystem system)
         {
+            
             string[] menuMain =
             {
-                "1. Ny Booking",
-                "2. Se Bookinger",
-                "3. Ret Booking",
-                "4. Annuller Booking",
-                "5. Afslut",
-            };
-            RenderCenteredBlock(menuMain);
-            ConsoleKeyInfo key = Console.ReadKey();
+                    "NY BOOKING",
+                    "SE BOOKINGER",
+                    "AFSLUT",
+                    };
 
-            switch (key.KeyChar)
+            while (true)
             {
-                
-                case '1':
+                int choice = ChooseFromList("HOVEDMENU", menuMain);
+
+                if (choice == 0)
+                {
+                    Medarbejder m = MedarbejderSelection(system);
 
                     Console.Clear();
-                    List<Moedelokale> moedelokaler = system.GetMoedelokaler();
-                
-                    foreach (Moedelokale moedelokale in moedelokaler)
-                    {
-                        Console.WriteLine($"{moedelokale.moedelokaleId}. {moedelokale.navn}\n");
-                    }
-                    Console.ReadKey(); 
-                    return;
+                    Console.WriteLine($"{m.navn}");
+                    Console.ReadKey();
+                }
 
-                case '2':
-                    return;
+                else if (choice == 1)
+                {
 
-                case '3':
-                    return;
+                }
 
-                case '4':
-                    return;
+                else if (choice == 2)
+                {
+                    break;
+                }
 
-                case '5':
-                    return;
             }
+
         }
+
     }
-}
+
+    
+}       
+    
+
