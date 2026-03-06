@@ -53,6 +53,7 @@ namespace KontorNord
             static void ShowBookings(BookingService bookingService, List<MeetingRoom> rooms)
             {
                 bookingService.RemoveExpiredBookings();
+                bookingService.SaveToFile();
                 var bookings = bookingService.GetAllBookings();
 
                 Console.WriteLine("\n--- Bookinger ---");
@@ -71,7 +72,7 @@ namespace KontorNord
                 // Print bookings
                 foreach (var b in sortedBookings)
                 {
-                    string roomName = GetRoomName(b.Id, rooms);
+                    string roomName = GetRoomName(b.RoomId, rooms);
 
                     // Print booking info
                     Console.WriteLine($"[{b.Id}] {b.Start:dd-MM-yyyy HH:mm} - {b.End:HH:mm} | {roomName} | {b.BookedBy}");
@@ -143,123 +144,123 @@ namespace KontorNord
 
                 foreach (var b in bookings)
                 {
-                    string roomName = GetRoomName(b.Id, rooms);
+                    string roomName = GetRoomName(b.RoomId, rooms);
                     Console.WriteLine($"[{b.Id}] {b.Start:dd-MM-yyyy HH:mm} - {b.End:HH:mm} | {roomName} | {b.BookedBy}");
                 }
 
-            }
 
-            int id;
+                int id;
 
-            while (true)
-            {
-                id = ReadInt("\nIndtast ID for den booking du vil slette: ", 1, 9999);
-
-                Booking? booking = bookingService.GetBookingById(id);
-
-                if (booking == null)
+                while (true)
                 {
-                    Console.WriteLine("Booking med det Id blev ikke fundet. Prøv igen.");
-                    continue;
+                    id = ReadInt("\nIndtast ID for den booking du vil slette: ", 1, 9999);
+
+                    Booking? booking = bookingService.GetBookingById(id);
+
+                    if (booking == null)
+                    {
+                        Console.WriteLine("Booking med det Id blev ikke fundet. Prøv igen.");
+                        continue;
+                    }
+
+                    break;
                 }
 
-                break;
-            }
-
-            string answer = ReadNonEmptyString("Er du sikker? (j/n): ").ToLower();
+                string answer = ReadNonEmptyString("Er du sikker? (j/n): ").ToLower();
 
 
-            if (answer != "j")
-            {
-                Console.WriteLine("Sletning annulleret.");
+                if (answer != "j")
+                {
+                    Console.WriteLine("Sletning annulleret.");
+                    Pause();
+                    return;
+                }
+
+                bool deleted = bookingService.DeleteBooking(id);
+
+                if (deleted)
+                {
+                    Console.WriteLine("Booking slettet!");
+                    bookingService.SaveToFile();
+                }
+                else
+                    Console.WriteLine("Booking med det Id blev ikke fundet");
+
                 Pause();
-                return;
             }
 
-            bool deleted = bookingService.DeleteBooking(id);
-
-            if (deleted)
+            static string GetRoomName(int roomId, List<MeetingRoom> rooms)
             {
-                Console.WriteLine("Booking slettet!");
-                bookingService.SaveToFile();
-            }
-            else
-                Console.WriteLine("Booking med det Id blev ikke fundet");
-
-            Pause();
-        }
-
-        static string GetRoomName(int roomId, List<MeetingRoom> rooms)
-        {
-            foreach (var r in rooms)
-            {
-                if (r.Id == roomId)
+                foreach (var r in rooms)
                 {
-                    return r.Name;
+                    if (r.Id == roomId)
+                    {
+                        return r.Name;
+                    }
+
                 }
-
+                return "Ukendt lokale";
             }
-            return "Ukendt lokale";
-        }
 
-        // --- Input validation methods ---
+            // --- Input validation methods ---
 
-        static int ReadInt(string message, int min, int max)
-        {
-            while (true)
+            static int ReadInt(string message, int min, int max)
             {
-                Console.Write(message);
-                if (int.TryParse(Console.ReadLine(), out int value) &&
-                    value >= min &&
-                    value <= max)
-                    return value;
+                while (true)
+                {
+                    Console.Write(message);
+                    if (int.TryParse(Console.ReadLine(), out int value) &&
+                        value >= min &&
+                        value <= max)
+                        return value;
 
-                Console.WriteLine($"Ugyldigt input. Skriv et tal mellem {min} og {max}");
+                    Console.WriteLine($"Ugyldigt input. Skriv et tal mellem {min} og {max}");
+                }
             }
-        }
 
-        static string ReadNonEmptyString(string message)
-        {
-            while (true)
+            static string ReadNonEmptyString(string message)
             {
-                Console.Write(message);
-                string? s = Console.ReadLine();
+                while (true)
+                {
+                    Console.Write(message);
+                    string? s = Console.ReadLine();
 
-                if (!string.IsNullOrWhiteSpace(s))
-                    return s.Trim();
+                    if (!string.IsNullOrWhiteSpace(s))
+                        return s.Trim();
 
-                Console.WriteLine("Feltet må ikke være tomt.");
+                    Console.WriteLine("Feltet må ikke være tomt.");
+                }
             }
-        }
 
-        static DateTime ReadDate(string message)
-        {
-            while (true)
+            static DateTime ReadDate(string message)
             {
-                Console.Write(message);
-                if (DateTime.TryParse(Console.ReadLine(), out var date))
-                    return date;
+                while (true)
+                {
+                    Console.Write(message);
+                    if (DateTime.TryParse(Console.ReadLine(), out var date))
+                        return date;
 
-                Console.WriteLine("Ugyldig dato. Eksempel: 2026-03-04");
+                    Console.WriteLine("Ugyldig dato. Eksempel: 2026-03-04");
+                }
             }
-        }
 
-        static TimeSpan ReadTime(string message)
-        {
-            while (true)
+            static TimeSpan ReadTime(string message)
             {
-                Console.Write(message);
-                if (TimeSpan.TryParse(Console.ReadLine(), out var time))
-                    return time;
+                while (true)
+                {
+                    Console.Write(message);
+                    if (TimeSpan.TryParse(Console.ReadLine(), out var time))
+                        return time;
 
-                Console.WriteLine("Ugyldigt tidspunkt. Eksempel: 13:30");
+                    Console.WriteLine("Ugyldigt tidspunkt. Eksempel: 13:30");
+                }
             }
-        }
 
-        static void Pause()
-        {
-            Console.Write("\n\nTryk på en vilkårlig tast for at returnere til menu...");
-            Console.ReadKey();
+            static void Pause()
+            {
+                Console.Write("\n\nTryk på en vilkårlig tast for at returnere til menu...");
+                Console.ReadKey();
+            }
         }
 
     }
