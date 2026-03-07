@@ -77,10 +77,27 @@
                         Console.WriteLine("Enter date:");
                         string date = Console.ReadLine();
 
-                        Booking newBooking = new Booking(roomName, bookedBy, date);
-                        bookings.Add(newBooking);
+                        bool alreadyBooked = false;
 
-                        Console.WriteLine("Booking added!");
+                        foreach (Booking booking in bookings)
+                        {
+                            if (booking.RoomName == roomName && booking.Date == date)
+                            {
+                                alreadyBooked = true;
+                            }
+                        }
+
+                        if (alreadyBooked)
+                        {
+                            Console.WriteLine("This room is already booked on that date.");
+                        }
+                        else
+                        {
+                            Booking newBooking = new Booking(roomName, bookedBy, date);
+                            bookings.Add(newBooking);
+
+                            Console.WriteLine("Booking added!");
+                        }
                     }
                     else
                     {
