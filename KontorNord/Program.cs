@@ -18,7 +18,8 @@
 
                 Console.WriteLine("KontorNord System");
                 Console.WriteLine("1 - Show Rooms");
-                Console.WriteLine("2 - Exit");
+                Console.WriteLine("2 - Add Room");
+                Console.WriteLine("3 - Exit");
 
 
                 string choice = Console.ReadLine();
@@ -35,7 +36,23 @@
                     }
 
                 }
-                else if (choice == "2")
+
+               else if (choice == "2")
+                {
+                    Console.WriteLine("Enter Room Name: ");
+                    string name = Console.ReadLine();
+
+                    Console.WriteLine("Enter Capacity: ");
+                    int capacity = int.Parse(Console.ReadLine());
+
+                    Room newRoom = new Room(name, capacity);
+                    rooms.Add(newRoom);
+
+                    Console.WriteLine("Room Added Successfully!");
+                }
+
+                
+                else if (choice == "3")
 
                 {
                  running = false;
