@@ -21,7 +21,8 @@
                 Console.WriteLine("1 - Show Rooms");
                 Console.WriteLine("2 - Add Room");
                 Console.WriteLine("3 - Add Booking");
-                Console.WriteLine("4 - Exit");
+                Console.WriteLine("4 - Show Bookings");
+                Console.WriteLine("5 - Exit");
 
 
                 string choice = Console.ReadLine();
@@ -72,8 +73,20 @@
 
                 }
 
-                
                 else if (choice == "4")
+                {
+
+                    foreach (Booking booking in bookings)
+                    {
+
+                        Console.WriteLine("Room: " + booking.RoomName + " | Booked by: " + booking.BookedBy + " | Date: " + booking.Date);
+
+                    }
+
+                }
+
+
+                else if (choice == "5")
 
                 {
                  running = false;
