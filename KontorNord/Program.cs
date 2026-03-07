@@ -29,7 +29,7 @@
                 if (choice == "1")
 
                 {
-
+                    Console.WriteLine();
                     foreach (Room room in rooms)
                     {
                         Console.WriteLine("Room: " + room.Name + " Capacity: " + room.Capacity);
@@ -67,7 +67,9 @@
                 Console.WriteLine();
             }
 
+
         }
+
     }
 }
 
