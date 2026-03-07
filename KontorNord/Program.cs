@@ -40,7 +40,7 @@
 
                 }
 
-               else if (choice == "2")
+                else if (choice == "2")
                 {
                     Console.WriteLine("Enter Room Name: ");
                     string name = Console.ReadLine();
@@ -56,40 +56,60 @@
 
                 else if (choice == "3")
                 {
-
-                    Console.WriteLine("Enter Room Name: ");
+                    Console.WriteLine("Enter room name:");
                     string roomName = Console.ReadLine();
 
-                    Console.WriteLine("Enter Your Name: "); 
-                    string bookedBy = Console.ReadLine();
+                    bool roomExists = false;
 
-                    Console.WriteLine("Enter Date: ");
-                    string date = Console.ReadLine();
+                    foreach (Room room in rooms)
+                    {
+                        if (room.Name == roomName)
+                        {
+                            roomExists = true;
+                        }
+                    }
 
-                    Booking newBooking = new Booking(roomName, bookedBy, date);
-                    bookings.Add(newBooking);
+                    if (roomExists)
+                    {
+                        Console.WriteLine("Enter your name:");
+                        string bookedBy = Console.ReadLine();
 
-                    Console.WriteLine("Booking Added!");
+                        Console.WriteLine("Enter date:");
+                        string date = Console.ReadLine();
 
+                        Booking newBooking = new Booking(roomName, bookedBy, date);
+                        bookings.Add(newBooking);
+
+                        Console.WriteLine("Booking added!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Room does not exist.");
+                    }
                 }
 
                 else if (choice == "4")
                 {
-
-                    foreach (Booking booking in bookings)
+                    if (bookings.Count == 0)
                     {
-
-                        Console.WriteLine("Room: " + booking.RoomName + " | Booked by: " + booking.BookedBy + " | Date: " + booking.Date);
-
+                        Console.WriteLine("No Bookings Found.");
                     }
-
+                    else
+                    {
+                        foreach (Booking booking in bookings)
+                        {
+                            Console.WriteLine("Room: " + booking.RoomName +
+                                              " | Booked by: " + booking.BookedBy +
+                                              " | Date: " + booking.Date);
+                        }
+                    }
                 }
 
 
                 else if (choice == "5")
 
                 {
-                 running = false;
+                    running = false;
                     Console.WriteLine("Program Closed.");
                 }
 
