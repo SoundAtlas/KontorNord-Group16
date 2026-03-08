@@ -93,7 +93,9 @@
                         }
                         else
                         {
-                            Booking newBooking = new Booking(roomName, bookedBy, date);
+                            int bookingId = bookings.Count + 1;
+                            
+                            Booking newBooking = new Booking(bookingId, roomName, bookedBy, date);
                             bookings.Add(newBooking);
 
                             Console.WriteLine("Booking added!");
@@ -115,7 +117,8 @@
                     {
                         foreach (Booking booking in bookings)
                         {
-                            Console.WriteLine("Room: " + booking.RoomName +
+                            Console.WriteLine("ID: " + booking.Id +
+                                              " | Room: " + booking.RoomName +
                                               " | Booked by: " + booking.BookedBy +
                                               " | Date: " + booking.Date);
                         }
