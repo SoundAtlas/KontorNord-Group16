@@ -2,6 +2,7 @@
 using KN.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Text;
 
 namespace KN.UI
@@ -132,5 +133,29 @@ namespace KN.UI
                 }
             }
         }
+
+        static DateTime ChooseDate(string title, DateTime initialDate, int yearSpan)
+        {
+            int day = initialDate.Day;
+            int month = initialDate.Month;
+            int year = initialDate.Year;
+            yearSpan = 2;
+
+            int activeField = 0;
+
+            int yearMin = DateTime.Today.Year;
+            int yearMax = yearMin + yearSpan;
+
+            
+
+                while (true)
+                {
+                    Console.Clear();
+                    Console.WriteLine("VAELG DATO\n\n");
+                    Console.WriteLine($"{day} / {month} / {year}");
+                }
+            
+        }
     }
 }
+
