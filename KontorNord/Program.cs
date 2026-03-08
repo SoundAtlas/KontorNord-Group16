@@ -71,11 +71,17 @@
 
                     if (roomExists)
                     {
-                        Console.WriteLine("Enter your name:");
+                        Console.WriteLine("Enter Your Name:");
                         string bookedBy = Console.ReadLine();
 
-                        Console.WriteLine("Enter date:");
+                        Console.WriteLine("Enter Date:");
                         string date = Console.ReadLine();
+
+                        Console.WriteLine("Enter Start Time (HH:mm):");
+                        TimeSpan startTime = TimeSpan.Parse(Console.ReadLine());
+
+                        Console.WriteLine("Enter End Time (HH:mm):");
+                        TimeSpan endTime = TimeSpan.Parse(Console.ReadLine());
 
                         bool alreadyBooked = false;
 
@@ -83,7 +89,10 @@
                         {
                             if (booking.RoomName == roomName && booking.Date == date)
                             {
-                                alreadyBooked = true;
+                                if (startTime < booking.EndTime && endTime > booking.StartTime)
+                                {
+                                    alreadyBooked = true;
+                                }
                             }
                         }
 
@@ -95,10 +104,10 @@
                         {
                             int bookingId = bookings.Count + 1;
                             
-                            Booking newBooking = new Booking(bookingId, roomName, bookedBy, date);
+                            Booking newBooking = new Booking(bookingId, roomName, bookedBy, date, startTime, endTime);
                             bookings.Add(newBooking);
 
-                            Console.WriteLine("Booking added!");
+                            Console.WriteLine("Booking Added!");
                         }
                     }
                     else
@@ -118,9 +127,11 @@
                         foreach (Booking booking in bookings)
                         {
                             Console.WriteLine("ID: " + booking.Id +
-                                              " | Room: " + booking.RoomName +
-                                              " | Booked by: " + booking.BookedBy +
-                                              " | Date: " + booking.Date);
+                  " | Room: " + booking.RoomName +
+                  " | Booked by: " + booking.BookedBy +
+                  " | Date: " + booking.Date +
+                  " | Start: " + booking.StartTime.ToString(@"hh\:mm") +
+                  " | End: " + booking.EndTime.ToString(@"hh\:mm"));
                         }
                     }
                 }

@@ -11,13 +11,18 @@ namespace KontorNord
             public string BookedBy { get; set; } = "";
         public string Date { get; set; } = "";
 
-        public Booking(int id, string roomName , string bookedBy, string date)
+        public TimeSpan StartTime {  get; set; }
+        public TimeSpan EndTime { get; set; }
+
+        public Booking(int id, string roomName , string bookedBy, string date, TimeSpan startTime, TimeSpan endTime)
         {
 
             Id = id;
             RoomName = roomName;
             BookedBy = bookedBy;
             Date = date;
+            StartTime = startTime;
+            EndTime = endTime;
 
         }
     }
