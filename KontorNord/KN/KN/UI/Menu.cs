@@ -158,35 +158,36 @@ namespace KN.UI
 
         public static void StartNewBooking(BookingSystem system)
         {
+
+            Medarbejder valgtMedarbejder = null;
             while (true)
             {
-                Medarbejder valgtMedarbejder = MedarbejderSelection(system);
+                valgtMedarbejder = MedarbejderSelection(system);
 
-                if (valgtMedarbejder == null)
-                {
-                    continue;
-                }
-
-                while (true)
-                {
-                    Moedelokale valgtMoedelokale = MoedelokaleSelection(system);
-
-                    if (valgtMoedelokale == null)
-                    {
-                        continue;
-                    }
-
-                    while (true)
-                    {
-                        DateTime? datoValg = DateSelection($"VAELG DATO:", DateTime.Today, 2);
-
-                        if (datoValg == null)
-                        {
-                            continue;
-                        }
-                    }
-                }
+                if (valgtMedarbejder == null) continue;
+                break;
             }
+
+            Moedelokale valgtMoedelokale = null;
+            while (true)
+            {
+                valgtMoedelokale = MoedelokaleSelection(system);
+
+                if (valgtMoedelokale == null) continue;
+                break;
+
+            }
+
+            DateTime? datoValg = null;
+            while (true)
+            {
+                datoValg = DateSelection($"VAELG DATO:", DateTime.Today, 2);
+
+                if (datoValg == null) continue;
+                break;
+            }
+
+
         }
     }
 }
