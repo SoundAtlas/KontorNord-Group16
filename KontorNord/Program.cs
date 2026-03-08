@@ -17,12 +17,12 @@
 
             {
 
-                Console.WriteLine("KontorNord System");
                 Console.WriteLine("1 - Show Rooms");
                 Console.WriteLine("2 - Add Room");
                 Console.WriteLine("3 - Add Booking");
                 Console.WriteLine("4 - Show Bookings");
-                Console.WriteLine("5 - Exit");
+                Console.WriteLine("5 - Delete Booking");
+                Console.WriteLine("6 - Exit");
 
 
                 string choice = Console.ReadLine();
@@ -125,8 +125,34 @@
                     }
                 }
 
-
                 else if (choice == "5")
+                {
+                    Console.WriteLine("Enter Booking ID To Delete:");
+                    int idToDelete = int.Parse(Console.ReadLine());
+
+                    Booking bookingToDelete = null;
+
+                    foreach (Booking booking in bookings)
+                    {
+                        if (booking.Id == idToDelete)
+                        {
+                            bookingToDelete = booking;
+                        }
+                    }
+
+                    if (bookingToDelete != null)
+                    {
+                        bookings.Remove(bookingToDelete);
+                        Console.WriteLine("Booking Deleted!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Booking Not Found.");
+                    }
+                }
+
+
+                else if (choice == "6")
 
                 {
                     running = false;
