@@ -1,4 +1,6 @@
-﻿using System;
+﻿using KN.Models;
+using KN.Services;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -119,16 +121,21 @@ namespace KN.UI
 
         }
 
-        public static DateTime ChooseDateList(string title, DateTime initialDate, int yearSpan)
+        public static (Moedelokale, DateTime)? PickRoomAndDate(string title, DateTime initialDate, int yearSpan, BookingSystem system)
         {
+            List<Moedelokale> moedelokaler = system.GetMoedelokaler();
+
             int day = initialDate.Day;
             int month = initialDate.Month;
             int year = initialDate.Year;
+            int roomIndex = 0;
 
             int activeField = 0;
 
             int yearMin = DateTime.Today.Year;
             int yearMax = yearMin + yearSpan;
+
+            
 
             while (true)
             {
@@ -137,20 +144,25 @@ namespace KN.UI
 
                 if (activeField == 0)
                 {
-                    Console.WriteLine($"[{day}] / {month} / {year}");
+                    Console.WriteLine($"[{moedelokaler[roomIndex].navn}] / {day} / {month} / {year}");
                 }
                 if (activeField == 1)
                 {
-                    Console.WriteLine($"{day} / [{month}] / {year}");
+                    Console.WriteLine($"{moedelokaler[roomIndex].navn} / [{day}] / {month} / {year}");
                 }
                 if (activeField == 2)
                 {
-                    Console.WriteLine($"{day} / {month} / [{year}]");
+                    Console.WriteLine($"{moedelokaler[roomIndex].navn} / {day} / [{month}] / {year}");
+                }
+                if (activeField == 3)
+                {
+                    Console.WriteLine($"{moedelokaler[roomIndex].navn} / {day} / {month} / [{year}]");
                 }
 
                 var key = Console.ReadKey(true).Key;
 
-                int lastFieldIndex = 2;
+                int lastFieldIndex = 3;
+                int lastRoomIndex = moedelokaler.Count - 1;
                 int lastMonth = 12;
                 int lastDay = DateTime.DaysInMonth(year, month);
                 int lastYear = yearMax;
@@ -180,6 +192,29 @@ namespace KN.UI
                 {
                     if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
                     {
+                        roomIndex++;
+
+                        if (roomIndex > lastRoomIndex)
+                        {
+                            roomIndex = 0;
+                        }
+                    }
+
+                    if (key == ConsoleKey.DownArrow || key == ConsoleKey.S)
+                    {
+                        roomIndex--;
+                        
+                        if (roomIndex < 0)
+                        {
+                            roomIndex = lastRoomIndex;
+                        }
+                    }
+                }
+
+                else if (activeField == 1)
+                {
+                    if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
+                    {
                         day++;
 
                         if (day > lastDay)
@@ -198,7 +233,7 @@ namespace KN.UI
                         }
                     }
                 }
-                else if (activeField == 1)
+                else if (activeField == 2)
                 {
 
                     if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
@@ -236,7 +271,7 @@ namespace KN.UI
                     }
                 }
 
-                else if (activeField == 2)
+                else if (activeField == 3)
                 {
                     if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
                     {
@@ -275,7 +310,7 @@ namespace KN.UI
 
                 if (key == ConsoleKey.Enter)
                 {
-                    return new DateTime(year, month, day);
+                    return (moedelokaler[roomIndex], new DateTime(year, month, day));
                 }
             }
         }
