@@ -133,7 +133,7 @@ namespace KN.UI
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("VAELG DATO\n\n");
+                Console.WriteLine(title + "\n");
 
                 if (activeField == 0)
                 {
@@ -149,7 +149,7 @@ namespace KN.UI
                 }
 
                 var key = Console.ReadKey(true).Key;
-                
+
                 int lastFieldIndex = 2;
                 int lastMonth = 12;
                 int lastDay = DateTime.DaysInMonth(year, month);
@@ -164,7 +164,6 @@ namespace KN.UI
                         activeField = lastFieldIndex;
                     }
 
-
                 }
 
                 if (key == ConsoleKey.RightArrow || key == ConsoleKey.D)
@@ -177,27 +176,103 @@ namespace KN.UI
                     }
                 }
 
-                if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
+                if (activeField == 0)
                 {
-                    month++;
-
-                    if (month > 12)
+                    if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
                     {
-                        month = 1;
+                        day++;
+
+                        if (day > lastDay)
+                        {
+                            day = 1;
+                        }
+                    }
+
+                    if (key == ConsoleKey.DownArrow || key == ConsoleKey.S)
+                    {
+                        day--;
+
+                        if (day < 1)
+                        {
+                            day = lastDay;
+                        }
+                    }
+                }
+                else if (activeField == 1)
+                {
+
+                    if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
+                    {
+                        month++;
+
+                        if (month > lastMonth)
+                        {
+                            month = 1;
+                        }
+
+                        int maxDay = DateTime.DaysInMonth(year, month);
+
+                        if (day > maxDay)
+                        {
+                            day = maxDay;
+                        }
+                    }
+
+                    if (key == ConsoleKey.DownArrow || key == ConsoleKey.S)
+                    {
+                        month--;
+
+                        if (month < 1)
+                        {
+                            month = lastMonth;
+                        }
+
+                        int maxDay = DateTime.DaysInMonth(year, month);
+
+                        if (day > maxDay)
+                        {
+                            day = maxDay;
+                        }
                     }
                 }
 
-                if (key == ConsoleKey.DownArrow || key == ConsoleKey.S)
+                else if (activeField == 2)
                 {
-                    month--;
-
-                    if (month < 1)
+                    if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
                     {
-                        month = 12;
+                        year++;
+
+                        if (year > yearMax)
+                        {
+                            year = yearMax;
+                        }
+
+                        int maxDay = DateTime.DaysInMonth(year, month);
+
+                        if (day > maxDay)
+                        {
+                            day = maxDay;
+                        }
+                    }
+
+                    if (key == ConsoleKey.DownArrow || key == ConsoleKey.S)
+                    {
+                        year--;
+
+                        if (year < yearMin)
+                        {
+                            year = yearMin;
+                        }
+
+                        int maxDay = DateTime.DaysInMonth(year, month);
+
+                        if (day > maxDay)
+                        {
+                            day = maxDay;
+                        }
                     }
                 }
             }
-
         }
     }
 }

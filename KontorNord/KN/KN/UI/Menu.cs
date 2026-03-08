@@ -117,7 +117,7 @@ namespace KN.UI
 
                         if (choiceconfirmMoedelokale == 0)
                         {
-                            DateTime valgtDato = ConsoleHelpers.ChooseDate($"VAELG DATO", DateTime.Today, 2);
+                            DateTime valgtDato = ConsoleHelpers.ChooseDate($"VAELG DATO:", DateTime.Today, 2);
                         }
                         else if (choiceconfirmMoedelokale == 1)
                         {
