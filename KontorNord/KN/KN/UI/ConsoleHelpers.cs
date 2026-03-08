@@ -119,7 +119,7 @@ namespace KN.UI
 
         }
 
-        public static DateTime ChooseDate(string title, DateTime initialDate, int yearSpan)
+        public static DateTime ChooseDateList(string title, DateTime initialDate, int yearSpan)
         {
             int day = initialDate.Day;
             int month = initialDate.Month;
@@ -271,6 +271,11 @@ namespace KN.UI
                             day = maxDay;
                         }
                     }
+                }
+
+                if (key == ConsoleKey.Enter)
+                {
+                    return new DateTime(year, month, day);
                 }
             }
         }
