@@ -28,33 +28,17 @@
                 string choice = Console.ReadLine();
 
 
-
                 if (choice == "1")
-
                 {
-                    Console.WriteLine();
-                    foreach (Room room in rooms)
-                    {
-                        Console.WriteLine("ID: " + room.Id + " | Room: " + room.Name + " | Capacity: " + room.Capacity);
-                    }
-
+                    ShowRooms(rooms);
                 }
+
 
                 else if (choice == "2")
                 {
-                    Console.WriteLine("Enter Room Name: ");
-                    string name = Console.ReadLine();
-
-                    Console.WriteLine("Enter Capacity: ");
-                    int capacity = int.Parse(Console.ReadLine());
-
-                    int roomId = rooms.Count + 1;
-
-                    Room newRoom = new Room(roomId, name, capacity);
-                    rooms.Add(newRoom);
-
-                    Console.WriteLine("Room Added Successfully!");
+                    AddRoom(rooms);
                 }
+
 
                 else if (choice == "3")
                 {
@@ -128,22 +112,7 @@
 
                 else if (choice == "4")
                 {
-                    if (bookings.Count == 0)
-                    {
-                        Console.WriteLine("No Bookings Found.");
-                    }
-                    else
-                    {
-                        foreach (Booking booking in bookings)
-                        {
-                            Console.WriteLine("ID: " + booking.Id +
-                  " | Room: " + booking.RoomName +
-                  " | Booked by: " + booking.BookedBy +
-                  " | Date: " + booking.Date +
-                  " | Start: " + booking.StartTime.ToString(@"hh\:mm") +
-                  " | End: " + booking.EndTime.ToString(@"hh\:mm"));
-                        }
-                    }
+                    ShowBookings(bookings);
                 }
 
                 else if (choice == "5")
@@ -151,7 +120,7 @@
                     Console.WriteLine("Enter Booking ID To Delete:");
                     int idToDelete = int.Parse(Console.ReadLine());
 
-                    Booking bookingToDelete = null;
+                    Booking? bookingToDelete = null;
 
                     foreach (Booking booking in bookings)
                     {
@@ -187,10 +156,62 @@
 
                 Console.WriteLine();
             }
-
-
+      
         }
 
-    }
+        static void ShowRooms(List<Room> rooms)
+        {
+            Console.WriteLine();
+
+            foreach (Room room in rooms)
+            {
+                Console.WriteLine("ID: " + room.Id + " | Room: " + room.Name + " | Capacity: " + room.Capacity);
+            }
+        }
+
+
+
+
+        static void ShowBookings(List<Booking> bookings)
+        {
+            if (bookings.Count == 0)
+            {
+                Console.WriteLine("No Bookings Found.");
+            }
+            else
+            {
+                foreach (Booking booking in bookings)
+                {
+                    Console.WriteLine("ID: " + booking.Id +
+                                      " | Room: " + booking.RoomName +
+                                      " | Booked by: " + booking.BookedBy +
+                                      " | Date: " + booking.Date +
+                                      " | Start: " + booking.StartTime.ToString(@"hh\:mm") +
+                                      " | End: " + booking.EndTime.ToString(@"hh\:mm"));
+                }
+            }
+        }
+                
+                
+                static void AddRoom(List<Room> rooms)
+                {
+                    Console.WriteLine("Enter Room Name: ");
+                    string name = Console.ReadLine();
+
+                    Console.WriteLine("Enter Capacity: ");
+                    int capacity = int.Parse(Console.ReadLine());
+
+                    int roomId = rooms.Count + 1;
+
+                    Room newRoom = new Room(roomId, name, capacity);
+                    rooms.Add(newRoom);
+
+                    Console.WriteLine("Room Added Successfully!");
+                }
+            }
+           
 }
+        
+    
+
 
