@@ -117,7 +117,7 @@ namespace KN.UI
 
                         if (choiceconfirmMoedelokale == 0)
                         {
-                            //To be implemented
+                            DateTime valgtDato = ConsoleHelpers.ChooseDate($"VAELG DATO", DateTime.Today, 2);
                         }
                         else if (choiceconfirmMoedelokale == 1)
                         {
@@ -132,29 +132,6 @@ namespace KN.UI
                     continue;
                 }
             }
-        }
-
-        static DateTime ChooseDate(string title, DateTime initialDate, int yearSpan)
-        {
-            int day = initialDate.Day;
-            int month = initialDate.Month;
-            int year = initialDate.Year;
-            yearSpan = 2;
-
-            int activeField = 0;
-
-            int yearMin = DateTime.Today.Year;
-            int yearMax = yearMin + yearSpan;
-
-            
-
-                while (true)
-                {
-                    Console.Clear();
-                    Console.WriteLine("VAELG DATO\n\n");
-                    Console.WriteLine($"{day} / {month} / {year}");
-                }
-            
         }
     }
 }
