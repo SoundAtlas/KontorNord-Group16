@@ -8,6 +8,42 @@ namespace KN.UI
 {
     internal class Menu
     {
+        public static void MenuMain(BookingSystem system)
+        {
+
+            string[] menuMain =
+            {
+                    "NY BOOKING",
+                    "SE BOOKINGER",
+                    "AFSLUT",
+                    };
+
+            while (true)
+            {
+                int choice = ConsoleHelpers.ChooseFromList("HOVEDMENU", menuMain);
+
+                if (choice == 0)
+                {
+                    StartNewBooking(system);
+                }
+
+                else if (choice == 1)
+                {
+                    Moedelokale valgtMoedelokale = Menu.MoedelokaleSelection(system);
+
+                    Console.Clear();
+                    Console.WriteLine($"{valgtMoedelokale.navn}");
+                    Console.ReadKey();
+                }
+
+                else if (choice == 2)
+                {
+                    break;
+                }
+
+            }
+
+        }
         public static Medarbejder MedarbejderSelection(BookingSystem system)
         {
             List<Medarbejder> medarbejdere = system.GetMedarbejdere();
@@ -38,95 +74,63 @@ namespace KN.UI
             return moedelokaler[selectedIndex];
         }
 
-        public static void MenuMain(BookingSystem system)
+        public static void StartNewBooking(BookingSystem system)
         {
-
-            string[] menuMain =
-            {
-                    "NY BOOKING",
-                    "SE BOOKINGER",
-                    "AFSLUT",
-                    };
-
             while (true)
             {
-                int choice = ConsoleHelpers.ChooseFromList("HOVEDMENU", menuMain);
 
-                if (choice == 0)
+                Medarbejder valgtMedarbejder = Menu.MedarbejderSelection(system);
+
+                Console.Clear();
+                Console.WriteLine($"{valgtMedarbejder.navn}");
+
+                Console.Clear();
+
+                string[] medarbejderConfirmation =
                 {
-                    while (true)
-                    {
-
-                        Medarbejder valgtMedarbejder = Menu.MedarbejderSelection(system);
-
-                        Console.Clear();
-                        Console.WriteLine($"{valgtMedarbejder.navn}");
-
-                        Console.Clear();
-
-                        string[] medarbejderConfirmation =
-                        {
                         "JA",
                         "NEJ",
                     };
 
 
-                        int choiceconfirmMedarbejder = ConsoleHelpers.ChooseFromList($"MEDARBEJDER: {valgtMedarbejder.navn}\n\nBEKRAEFT?", medarbejderConfirmation);
+                int choiceconfirmMedarbejder = ConsoleHelpers.ChooseFromList($"MEDARBEJDER: {valgtMedarbejder.navn}\n\nBEKRAEFT?", medarbejderConfirmation);
 
-                        if (choiceconfirmMedarbejder == 0)
+                if (choiceconfirmMedarbejder == 0)
+                {
+                    while (true)
+                    {
+                        Moedelokale valgtMoedelokale = Menu.MoedelokaleSelection(system);
+
+                        Console.Clear();
+                        Console.WriteLine($"{valgtMoedelokale.navn}");
+
+                        Console.Clear();
+
+                        string[] moedelokaleConfirmation =
                         {
-                            while (true)
-                            {
-                                Moedelokale valgtMoedelokale = Menu.MoedelokaleSelection(system);
-
-                                Console.Clear();
-                                Console.WriteLine($"{valgtMoedelokale.navn}");
-
-                                Console.Clear();
-
-                                string[] moedelokaleConfirmation =
-                                {
                                "JA",
                                "NEJ",
                             };
 
-                                int choiceconfirmMoedelokale = ConsoleHelpers.ChooseFromList($"MOEDELOKALE: {valgtMoedelokale.navn}\n\nBEKRAEFT?", moedelokaleConfirmation);
+                        int choiceconfirmMoedelokale = ConsoleHelpers.ChooseFromList($"MOEDELOKALE: {valgtMoedelokale.navn}\n\nBEKRAEFT?", moedelokaleConfirmation);
 
-                                if (choiceconfirmMoedelokale == 0)
-                                {
-                                    //To be implemented
-                                }
-                                else if (choiceconfirmMoedelokale == 1)
-                                {
-                                    continue;
-                                }
-
-                                break;
-                            }
+                        if (choiceconfirmMoedelokale == 0)
+                        {
+                            //To be implemented
                         }
-                        else if (choiceconfirmMedarbejder == 1)
+                        else if (choiceconfirmMoedelokale == 1)
                         {
                             continue;
                         }
+
+                        break;
                     }
                 }
-
-                else if (choice == 1)
+                else if (choiceconfirmMedarbejder == 1)
                 {
-                    Moedelokale valgtMoedelokale = Menu.MoedelokaleSelection(system);
-
-                    Console.Clear();
-                    Console.WriteLine($"{valgtMoedelokale.navn}");
-                    Console.ReadKey();
+                    continue;
                 }
-
-                else if (choice == 2)
-                {
-                    break;
-                }
-
             }
-
         }
     }
 }
