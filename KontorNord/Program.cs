@@ -7,9 +7,9 @@
             List<Room> rooms = new List<Room>();
             List<Booking> bookings = new List<Booking>();
 
-            rooms.Add(new Room("Alpha", 10));
-            rooms.Add(new Room("Beta", 8));
-            rooms.Add(new Room("Gamma", 20));
+            rooms.Add(new Room(1, "Alpha", 10));
+            rooms.Add(new Room(2, "Beta", 8));
+            rooms.Add(new Room(3, "Gamma", 20));
 
             bool running = true;
 
@@ -35,7 +35,7 @@
                     Console.WriteLine();
                     foreach (Room room in rooms)
                     {
-                        Console.WriteLine("Room: " + room.Name + " Capacity: " + room.Capacity);
+                        Console.WriteLine("ID: " + room.Id + " | Room: " + room.Name + " | Capacity: " + room.Capacity);
                     }
 
                 }
@@ -48,7 +48,9 @@
                     Console.WriteLine("Enter Capacity: ");
                     int capacity = int.Parse(Console.ReadLine());
 
-                    Room newRoom = new Room(name, capacity);
+                    int roomId = rooms.Count + 1;
+
+                    Room newRoom = new Room(roomId, name, capacity);
                     rooms.Add(newRoom);
 
                     Console.WriteLine("Room Added Successfully!");
@@ -56,21 +58,29 @@
 
                 else if (choice == "3")
                 {
-                    Console.WriteLine("Enter room name:");
-                    string roomName = Console.ReadLine();
-
-                    bool roomExists = false;
+                    Console.WriteLine("Choose a room by ID:");
 
                     foreach (Room room in rooms)
                     {
-                        if (room.Name == roomName)
+                        Console.WriteLine(room.Id + " - " + room.Name);
+                    }
+
+                    int roomId = int.Parse(Console.ReadLine());
+
+                    Room? selectedRoom = null;
+
+                    foreach (Room room in rooms)
+                    {
+                        if (room.Id == roomId)
                         {
-                            roomExists = true;
+                            selectedRoom = room;
                         }
                     }
 
-                    if (roomExists)
+                    if (selectedRoom != null)
                     {
+                        string roomName = selectedRoom.Name;
+
                         Console.WriteLine("Enter Your Name:");
                         string bookedBy = Console.ReadLine();
 
@@ -103,7 +113,7 @@
                         else
                         {
                             int bookingId = bookings.Count + 1;
-                            
+
                             Booking newBooking = new Booking(bookingId, roomName, bookedBy, date, startTime, endTime);
                             bookings.Add(newBooking);
 
@@ -112,7 +122,7 @@
                     }
                     else
                     {
-                        Console.WriteLine("Room does not exist.");
+                        Console.WriteLine("Room not found.");
                     }
                 }
 
