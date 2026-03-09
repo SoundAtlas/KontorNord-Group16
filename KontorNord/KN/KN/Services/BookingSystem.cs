@@ -1,5 +1,4 @@
 ﻿using KN.Models;
-using KN.UI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,6 +20,7 @@ namespace KN.Services
 
             InitializeMedarbejdere();
             InitializeMoedelokaler();
+            InitializeBookings();
         }
         
         private void InitializeMedarbejdere()
@@ -79,6 +79,17 @@ namespace KN.Services
             canopus.moedelokaleId = 3;
             canopus.navn = "Canopus";
             moedelokaler.Add(canopus);
+        }
+
+        private void InitializeBookings()
+        {
+            Booking booking = new Booking();
+            booking.moedelokale = moedelokaler[0];
+            booking.medarbejder = medarbejdere[1];
+            booking.dato = DateTime.Today;
+            booking.startTid = new TimeSpan(9, 0, 0);
+            booking.slutTid = new TimeSpan(10, 30, 0);
+            bookings.Add(booking);
         }
 
         public List<Medarbejder> GetMedarbejdere()
