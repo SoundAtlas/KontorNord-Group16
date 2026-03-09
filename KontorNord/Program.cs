@@ -25,7 +25,7 @@
                 Console.WriteLine("6 - Exit");
 
 
-                string choice = Console.ReadLine();
+                string? choice = Console.ReadLine();
 
 
                 if (choice == "1")
@@ -121,10 +121,25 @@
         static void AddRoom(List<Room> rooms)
         {
             Console.WriteLine("Enter Room Name: ");
-            string name = Console.ReadLine();
+            string? name = Console.ReadLine();
+
+            if(string.IsNullOrWhiteSpace(name))
+            {
+
+                Console.WriteLine("Room name cannot be empty.");
+                return;
+
+            }
 
             Console.WriteLine("Enter Capacity: ");
-            int capacity = int.Parse(Console.ReadLine());
+            string? capacityInput = Console.ReadLine();
+
+            if (!int.TryParse(capacityInput, out int capacity))
+            {
+                Console.WriteLine("Invalid capacity.");
+                return;
+            }
+
 
             int roomId = rooms.Count + 1;
 
@@ -139,7 +154,13 @@
         static void DeleteBooking(List<Booking> bookings)
         {
             Console.WriteLine("Enter Booking ID To Delete:");
-            int idToDelete = int.Parse(Console.ReadLine());
+            string? idInput = Console.ReadLine();
+
+            if (!int.TryParse(idInput, out int idToDelete))
+            {
+                Console.WriteLine("Invalid booking ID.");
+                return;
+            }
 
             Booking? bookingToDelete = null;
 
@@ -171,7 +192,13 @@
                 Console.WriteLine(room.Id + " - " + room.Name);
             }
 
-            int roomId = int.Parse(Console.ReadLine());
+            string? roomIdInput = Console.ReadLine();
+
+            if (!int.TryParse(roomIdInput, out int roomId))
+            {
+                Console.WriteLine("Invalid room ID.");
+                return;
+            }
 
             Room? selectedRoom = null;
 
@@ -188,19 +215,42 @@
                 string roomName = selectedRoom.Name;
 
                 Console.WriteLine("Enter Your Name:");
-                string bookedBy = Console.ReadLine();
+                string? bookedBy = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(bookedBy))
+                {
+                    Console.WriteLine("Name cannot be empty.");
+                    return;
+                }
 
                 Console.WriteLine("Enter Date:");
-                string date = Console.ReadLine();
+                string? date = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(date))
+                {
+                    Console.WriteLine("Date cannot be empty.");
+                    return;
+                }
 
                 Console.WriteLine("Enter Start Time (HH:mm):");
-                TimeSpan startTime = TimeSpan.Parse(Console.ReadLine());
+                string? startInput = Console.ReadLine();
+
+                if (!TimeSpan.TryParse(startInput, out TimeSpan startTime))
+                {
+                    Console.WriteLine("Invalid start time.");
+                    return;
+                }
 
                 Console.WriteLine("Enter End Time (HH:mm):");
-                TimeSpan endTime = TimeSpan.Parse(Console.ReadLine());
+                string? endInput = Console.ReadLine();
+
+                if (!TimeSpan.TryParse(endInput, out TimeSpan endTime))
+                {
+                    Console.WriteLine("Invalid end time.");
+                    return;
+                }
 
                 bool alreadyBooked = false;
-
                 foreach (Booking booking in bookings)
                 {
                     if (booking.RoomName == roomName && booking.Date == date)
