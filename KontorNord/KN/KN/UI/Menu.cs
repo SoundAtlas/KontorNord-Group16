@@ -155,6 +155,9 @@ namespace KN.UI
 
             Moedelokale valgtMoedelokale = lokaleDato.Value.moedelokale;
             DateTime valgtDato = lokaleDato.Value.dato;
+
+            List<Booking> bookingsValgtLokaleDato = system.GetBookingMatchesMoedelokaleDato(valgtMoedelokale.moedelokaleId, valgtDato);
+            
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using KN.Models;
+using KN.UI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -88,6 +89,22 @@ namespace KN.Services
         public List<Moedelokale> GetMoedelokaler()
         {
             return moedelokaler;
+        }
+
+        public List<Booking> GetBookingMatchesMoedelokaleDato(int roomId, DateTime dato)
+        {
+           List<Booking> matches = new List<Booking>();
+
+            foreach (Booking booking in bookings)
+            {
+                if ((booking.moedelokale.moedelokaleId == roomId)
+                    && (booking.dato.Date == dato.Date))
+                {
+                    matches.Add(booking); 
+                }
+            }
+            
+            return matches;
         }
     }
 }
