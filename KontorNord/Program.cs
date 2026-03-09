@@ -14,81 +14,76 @@
             bool running = true;
 
             while (running)
-
             {
-                Console.WriteLine("=================================");
-                Console.WriteLine("     KONTORNORD BOOKING SYSTEM   ");
-                Console.WriteLine("=================================");
-                Console.WriteLine("1 - Show Rooms");
-                Console.WriteLine("2 - Add Room");
-                Console.WriteLine("3 - Add Booking");
-                Console.WriteLine("4 - Show Bookings");
-                Console.WriteLine("5 - Delete Booking");
-                Console.WriteLine("6 - Exit");
-
+                Console.Clear();
+                ShowMenu();
 
                 string? choice = Console.ReadLine();
-
 
                 if (choice == "1")
                 {
                     ShowRooms(rooms);
+                    Pause();
                 }
-
-
-
-
                 else if (choice == "2")
                 {
                     AddRoom(rooms);
+                    Pause();
                 }
-
-
-
-
                 else if (choice == "3")
                 {
                     AddBooking(rooms, bookings);
+                    Pause();
                 }
-
-
-
-
                 else if (choice == "4")
                 {
                     ShowBookings(bookings);
+                    Pause();
                 }
-
-
-
-
                 else if (choice == "5")
                 {
                     DeleteBooking(bookings);
+                    Pause();
                 }
-
-
-
                 else if (choice == "6")
-
                 {
                     running = false;
                     Console.WriteLine("Program Closed.");
                 }
-
                 else
                 {
-                    Console.WriteLine("Invaild Choice. ");
+                    Console.WriteLine("Invalid choice.");
+                    Pause();
                 }
-
-                Console.WriteLine();
             }
+        }
 
+        static void ShowMenu()
+        {
+            Console.WriteLine("=================================");
+            Console.WriteLine("     KONTORNORD BOOKING SYSTEM   ");
+            Console.WriteLine("=================================");
+            Console.WriteLine("1 - Show Rooms");
+            Console.WriteLine("2 - Add Room");
+            Console.WriteLine("3 - Add Booking");
+            Console.WriteLine("4 - Show Bookings");
+            Console.WriteLine("5 - Delete Booking");
+            Console.WriteLine("6 - Exit");
+            Console.WriteLine("=================================");
+            Console.Write("Choose an option: ");
+        }
+
+        static void Pause()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
         }
 
         static void ShowRooms(List<Room> rooms)
         {
             Console.WriteLine();
+            Console.WriteLine("----- ROOMS -----");
 
             foreach (Room room in rooms)
             {
@@ -96,11 +91,11 @@
             }
         }
 
-
-
-
         static void ShowBookings(List<Booking> bookings)
         {
+            Console.WriteLine();
+            Console.WriteLine("----- BOOKINGS -----");
+
             if (bookings.Count == 0)
             {
                 Console.WriteLine("No Bookings Found.");
@@ -119,18 +114,18 @@
             }
         }
 
-
         static void AddRoom(List<Room> rooms)
         {
+            Console.WriteLine();
+            Console.WriteLine("----- ADD ROOM -----");
+
             Console.WriteLine("Enter Room Name: ");
             string? name = Console.ReadLine();
 
-            if(string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
-
                 Console.WriteLine("Room name cannot be empty.");
                 return;
-
             }
 
             Console.WriteLine("Enter Capacity: ");
@@ -142,7 +137,6 @@
                 return;
             }
 
-
             int roomId = rooms.Count + 1;
 
             Room newRoom = new Room(roomId, name, capacity);
@@ -151,10 +145,11 @@
             Console.WriteLine("Room Added Successfully!");
         }
 
-
-
         static void DeleteBooking(List<Booking> bookings)
         {
+            Console.WriteLine();
+            Console.WriteLine("----- DELETE BOOKING -----");
+
             Console.WriteLine("Enter Booking ID To Delete:");
             string? idInput = Console.ReadLine();
 
@@ -171,6 +166,7 @@
                 if (booking.Id == idToDelete)
                 {
                     bookingToDelete = booking;
+                    break;
                 }
             }
 
@@ -187,6 +183,8 @@
 
         static void AddBooking(List<Room> rooms, List<Booking> bookings)
         {
+            Console.WriteLine();
+            Console.WriteLine("----- ADD BOOKING -----");
             Console.WriteLine("Choose a room by ID:");
 
             foreach (Room room in rooms)
@@ -209,6 +207,7 @@
                 if (room.Id == roomId)
                 {
                     selectedRoom = room;
+                    break;
                 }
             }
 
@@ -252,7 +251,14 @@
                     return;
                 }
 
+                if (endTime <= startTime)
+                {
+                    Console.WriteLine("End time must be later than start time.");
+                    return;
+                }
+
                 bool alreadyBooked = false;
+
                 foreach (Booking booking in bookings)
                 {
                     if (booking.RoomName == roomName && booking.Date == date)
@@ -260,6 +266,7 @@
                         if (startTime < booking.EndTime && endTime > booking.StartTime)
                         {
                             alreadyBooked = true;
+                            break;
                         }
                     }
                 }
@@ -285,7 +292,3 @@
         }
     }
 }
-
-
-
-
