@@ -2,9 +2,20 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace KN.Services
 {
+    internal class BookingSaveModel
+    {
+        public int bookingId { get; set; }
+        public int medarbejderId { get; set; }
+        public int moedelokaleId { get; set; }
+        public DateTime dato { get; set; }
+        public int startMinutes { get; set; }
+        public int slutMinutes { get; set; }
+        public string note { get; set; } = "";
+    }
     internal class BookingSystem
     {
         private List<Booking> bookings;
@@ -20,9 +31,10 @@ namespace KN.Services
 
             InitializeMedarbejdere();
             InitializeMoedelokaler();
-            InitializeBookings();
+            LoadBookingsFromFile();
         }
-        
+
+        private const string BookingsFileName = "bookings.json";
         private void InitializeMedarbejdere()
         {
             Medarbejder sofieMoeller = new Medarbejder();
@@ -30,7 +42,7 @@ namespace KN.Services
             sofieMoeller.navn = "Sofie Moeller";
             sofieMoeller.rolle = "Projekt- og administrationsmedarbejder";
             medarbejdere.Add(sofieMoeller);
-            
+
 
             Medarbejder amirRahimi = new Medarbejder();
             amirRahimi.medarbejderId = 2;
@@ -95,13 +107,14 @@ namespace KN.Services
         public void AddBooking(Booking booking)
         {
             bookings.Add(booking);
+            SaveBookingsToFile();
         }
 
         public List<Medarbejder> GetMedarbejdere()
         {
-            return medarbejdere; 
+            return medarbejdere;
         }
-    
+
         public List<Moedelokale> GetMoedelokaler()
         {
             return moedelokaler;
@@ -109,18 +122,81 @@ namespace KN.Services
 
         public List<Booking> GetBookingMatchesMoedelokaleDato(int roomId, DateTime dato)
         {
-           List<Booking> matches = new List<Booking>();
+            List<Booking> matches = new List<Booking>();
 
             foreach (Booking booking in bookings)
             {
                 if ((booking.moedelokale.moedelokaleId == roomId)
                     && (booking.dato.Date == dato.Date))
                 {
-                    matches.Add(booking); 
+                    matches.Add(booking);
                 }
             }
-            
+
             return matches;
+        }
+
+        private void SaveBookingsToFile()
+        {
+            var saveList = new List<BookingSaveModel>();
+
+            foreach (var b in bookings)
+            {
+                saveList.Add(new BookingSaveModel
+                {
+                    bookingId = b.bookingId,
+                    medarbejderId = b.medarbejder.medarbejderId,
+                    moedelokaleId = b.moedelokale.moedelokaleId,
+                    dato = b.dato.Date,
+                    startMinutes = (int)b.startTid.TotalMinutes,
+                    slutMinutes = (int)b.slutTid.TotalMinutes,
+                    note = b.note ?? ""
+                });
+            }
+
+            var options = new System.Text.Json.JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+
+            string json = System.Text.Json.JsonSerializer.Serialize(saveList, options);
+            File.WriteAllText(BookingsFileName, json);
+        }
+
+        private void LoadBookingsFromFile()
+        {
+            if (!File.Exists(BookingsFileName))
+                return;
+
+            string json = File.ReadAllText(BookingsFileName);
+
+            List<BookingSaveModel>? saveList =
+                System.Text.Json.JsonSerializer.Deserialize<List<BookingSaveModel>>(json);
+
+            if (saveList == null)
+                return;
+            
+            bookings.Clear();
+
+            foreach (var s in saveList)
+            {
+                Medarbejder? m = medarbejdere.Find(x => x.medarbejderId == s.medarbejderId);
+                Moedelokale? r = moedelokaler.Find(x => x.moedelokaleId == s.moedelokaleId);
+
+                if (m == null || r == null)
+                    continue;
+
+                Booking b = new Booking();
+                b.bookingId = s.bookingId;
+                b.medarbejder = m;
+                b.moedelokale = r;
+                b.dato = s.dato.Date;
+                b.startTid = TimeSpan.FromMinutes(s.startMinutes);
+                b.slutTid = TimeSpan.FromMinutes(s.slutMinutes);
+                b.note = s.note ?? "";
+
+                bookings.Add(b);
+            }
         }
     }
 }
