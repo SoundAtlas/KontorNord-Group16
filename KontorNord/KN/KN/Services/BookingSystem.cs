@@ -92,6 +92,11 @@ namespace KN.Services
             bookings.Add(booking);
         }
 
+        public void AddBooking(Booking booking)
+        {
+            bookings.Add(booking);
+        }
+
         public List<Medarbejder> GetMedarbejdere()
         {
             return medarbejdere; 

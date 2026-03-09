@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using System.Threading;
 
 namespace KN.UI
 {
@@ -135,7 +136,6 @@ namespace KN.UI
 
         public static void StartNewBooking(BookingSystem system)
         {
-
             Medarbejder valgtMedarbejder = null;
             while (true)
             {
@@ -159,6 +159,36 @@ namespace KN.UI
             List<Booking> bookingsValgtLokaleDato = system.GetBookingMatchesMoedelokaleDato(valgtMoedelokale.moedelokaleId, valgtDato);
 
             (TimeSpan startTid, TimeSpan slutTid) = ConsoleHelpers.PickStartTidSlutTid(bookingsValgtLokaleDato, new TimeSpan(8,0,0), new TimeSpan(18,0,0));
+
+            Console.Clear();
+
+            string[] bookingConfirmation =
+            {
+                        "JA",
+                        "NEJ",
+            };
+
+            int choiceConfirmBooking = ConsoleHelpers.ChooseFromList($"BOOKING:\n{valgtMoedelokale.navn}\n{valgtDato:dd/MM/yyyy}\n{startTid:hh\\:mm} - {slutTid:hh\\:mm}\n\nBEKRAEFT?", bookingConfirmation);
+            if (choiceConfirmBooking == 0)
+            {
+                Booking booking = new Booking();
+                booking.moedelokale = valgtMoedelokale;
+                booking.medarbejder = valgtMedarbejder;
+                booking.dato = valgtDato;
+                booking.startTid = startTid;
+                booking.slutTid = slutTid;
+                system.AddBooking(booking);
+
+                Console.Clear();
+                Console.WriteLine("BOOKING OPRETTET");
+                Console.ReadKey(true);
+
+                return; 
+            }
+            if (choiceConfirmBooking == 1)
+            {
+                return;
+            }
         }
     }
 }

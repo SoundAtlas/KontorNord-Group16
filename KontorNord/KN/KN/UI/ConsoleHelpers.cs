@@ -132,8 +132,6 @@ namespace KN.UI
             int yearMin = DateTime.Today.Year;
             int yearMax = yearMin + yearSpan;
 
-            
-
             while (true)
             {
                 Console.Clear();
