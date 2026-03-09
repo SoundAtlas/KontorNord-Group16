@@ -158,28 +158,7 @@ namespace KN.UI
 
             List<Booking> bookingsValgtLokaleDato = system.GetBookingMatchesMoedelokaleDato(valgtMoedelokale.moedelokaleId, valgtDato);
 
-            TimeSpan start = new TimeSpan(8, 0, 0);
-            TimeSpan end = new TimeSpan(18, 0 , 0);
-            TimeSpan step = new TimeSpan(0, 30, 0);
-
-            for (TimeSpan t = start; t <= end; t = t.Add(step))
-            {
-                bool blocked = false;
-
-                foreach (Booking b in bookingsValgtLokaleDato)
-                {
-                    if (b.startTid <= t && t < b.slutTid)
-                    {
-                        blocked = true; 
-                        break; 
-                    }
-                }
-
-                Console.WriteLine($"{(blocked ? "X" : " ")} {t:hh\\:mm}");
-            }
-
-            Console.WriteLine("\nFortsaet...");
-            Console.ReadKey(true);
+            TimeSpan valgtTid = ConsoleHelpers.PickStartTidSlutTid(bookingsValgtLokaleDato, new TimeSpan(8,0,0), new TimeSpan(18,0,0));
         }
     }
 }

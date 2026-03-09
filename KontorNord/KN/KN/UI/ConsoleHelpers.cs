@@ -3,6 +3,7 @@ using KN.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static System.Net.WebRequestMethods;
 
 namespace KN.UI
 {
@@ -81,11 +82,6 @@ namespace KN.UI
                 {
                     return selected;
                 }
-
-
-
-
-
             }
         }
 
@@ -111,7 +107,7 @@ namespace KN.UI
                 @$"║                                                                               ║",
                 @$"╚═══════════════════════════════════════════════════════════════════════════════╝",
 
-                    };
+            };
 
             ConsoleHelpers.RenderCenteredBlock(titleScreen);
             Console.CursorVisible = false;
@@ -311,6 +307,114 @@ namespace KN.UI
                 if (key == ConsoleKey.Enter)
                 {
                     return (moedelokaler[roomIndex], new DateTime(year, month, day));
+                }
+            }
+        }
+
+        public static TimeSpan PickStartTidSlutTid(List<Booking> bookingsValgtLokaleDato, TimeSpan start, TimeSpan end)
+        {
+            List<TimeSpan> ticks = new List<TimeSpan>();
+            for (TimeSpan t = start; t <= end; t = t.Add(TimeSpan.FromMinutes(30)))
+            {
+                ticks.Add(t); 
+            }
+
+            bool[] blocked = new bool[ticks.Count];
+
+            for (int i = 0; i < ticks.Count; i++)
+            {
+                TimeSpan t = ticks[i];
+
+                foreach (Booking b in bookingsValgtLokaleDato)
+                {
+                    if (b.startTid <= t && t < b.slutTid)
+                    {
+                        blocked[i] = true; 
+                        break; 
+                    }
+                    
+                }
+            }
+
+            int selectedIndex = 0;
+            while (selectedIndex < blocked.Length && blocked[selectedIndex])
+            {
+                selectedIndex++;
+            }
+
+            while (true)
+            {
+                Console.Clear();
+
+                for (int i = 0; i < ticks.Count; i++)
+                {
+                        if (i == selectedIndex)
+                        {
+                            if (blocked[i] == true)
+                            {
+                                Console.WriteLine($">| X |{ticks[i]:hh\\:mm}  <");
+                            }
+                            else
+                            {
+                                Console.WriteLine($">|   |{ticks[i]:hh\\:mm}  <");
+                            }
+                        }
+                        else
+                        {
+                            if (blocked[i] == true)
+                            {
+                                Console.WriteLine($" | X |{ticks[i]:hh\\:mm}  ");
+                            }
+                            else
+                            {
+                                Console.WriteLine($" |   |{ticks[i]:hh\\:mm}  ");
+                            }
+                        
+                        }
+                }
+
+                var key = Console.ReadKey(true).Key;
+                int lastIndex = ticks.Count - 1;
+
+                if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
+                {
+                    selectedIndex--;
+
+                    if (selectedIndex < 0)
+                    {
+                        selectedIndex = lastIndex;
+                    }
+                    while (blocked[selectedIndex] == true)
+                    {
+                        selectedIndex--;
+                        if (selectedIndex < 0)
+                        {
+                            selectedIndex = lastIndex;
+                        }
+                    }
+                }
+
+                if (key == ConsoleKey.DownArrow || key == ConsoleKey.S)
+                {
+                    selectedIndex++;
+
+                    if (selectedIndex > lastIndex)
+                    {
+                        selectedIndex = 0;
+                    }
+                    while (blocked[selectedIndex] == true)
+                    {
+                        selectedIndex++;
+                        if (selectedIndex > lastIndex)
+                        {
+                            selectedIndex = 0;
+                        }
+                    }
+                }
+
+                if (key == ConsoleKey.Enter)
+                {
+                    return ticks[selectedIndex];
                 }
             }
         }

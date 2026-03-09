@@ -9,7 +9,7 @@ namespace KN
     {
         static void Main(string[] args)
         {
-            ConsoleHelpers.ShowTitleScreen(4000);
+            ConsoleHelpers.ShowTitleScreen(2000);
 
             BookingSystem system = new BookingSystem();
 
