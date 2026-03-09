@@ -16,7 +16,9 @@
             while (running)
 
             {
-
+                Console.WriteLine("=================================");
+                Console.WriteLine("     KONTORNORD BOOKING SYSTEM   ");
+                Console.WriteLine("=================================");
                 Console.WriteLine("1 - Show Rooms");
                 Console.WriteLine("2 - Add Room");
                 Console.WriteLine("3 - Add Booking");
