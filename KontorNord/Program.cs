@@ -1,4 +1,6 @@
-﻿namespace KontorNord
+﻿using System.Globalization;
+
+namespace KontorNord
 {
     internal class Program
     {
@@ -48,7 +50,7 @@
                 else if (choice == "6")
                 {
                     running = false;
-                    Console.WriteLine("Program Closed.");
+                    Console.WriteLine("Program closed.");
                 }
                 else
                 {
@@ -61,7 +63,7 @@
         static void ShowMenu()
         {
             Console.WriteLine("=================================");
-            Console.WriteLine("     KONTORNORD BOOKING SYSTEM   ");
+            Console.WriteLine("        KONTORNORD SYSTEM        ");
             Console.WriteLine("=================================");
             Console.WriteLine("1 - Show Rooms");
             Console.WriteLine("2 - Add Room");
@@ -76,8 +78,8 @@
         static void Pause()
         {
             Console.WriteLine();
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
+            Console.Write("Press any key to continue...");
+            Console.ReadKey(true);
         }
 
         static void ShowRooms(List<Room> rooms)
@@ -98,7 +100,7 @@
 
             if (bookings.Count == 0)
             {
-                Console.WriteLine("No Bookings Found.");
+                Console.WriteLine("No bookings found.");
             }
             else
             {
@@ -119,7 +121,7 @@
             Console.WriteLine();
             Console.WriteLine("----- ADD ROOM -----");
 
-            Console.WriteLine("Enter Room Name: ");
+            Console.Write("Enter Room Name: ");
             string? name = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(name))
@@ -128,7 +130,7 @@
                 return;
             }
 
-            Console.WriteLine("Enter Capacity: ");
+            Console.Write("Enter Capacity: ");
             string? capacityInput = Console.ReadLine();
 
             if (!int.TryParse(capacityInput, out int capacity))
@@ -142,7 +144,7 @@
             Room newRoom = new Room(roomId, name, capacity);
             rooms.Add(newRoom);
 
-            Console.WriteLine("Room Added Successfully!");
+            Console.WriteLine("Room added successfully!");
         }
 
         static void DeleteBooking(List<Booking> bookings)
@@ -150,7 +152,15 @@
             Console.WriteLine();
             Console.WriteLine("----- DELETE BOOKING -----");
 
-            Console.WriteLine("Enter Booking ID To Delete:");
+            if (bookings.Count == 0)
+            {
+                Console.WriteLine("No bookings available to delete.");
+                return;
+            }
+
+            ShowBookings(bookings);
+            Console.WriteLine();
+            Console.Write("Enter Booking ID to delete: ");
             string? idInput = Console.ReadLine();
 
             if (!int.TryParse(idInput, out int idToDelete))
@@ -173,11 +183,11 @@
             if (bookingToDelete != null)
             {
                 bookings.Remove(bookingToDelete);
-                Console.WriteLine("Booking Deleted!");
+                Console.WriteLine("Booking deleted!");
             }
             else
             {
-                Console.WriteLine("Booking Not Found.");
+                Console.WriteLine("Booking not found.");
             }
         }
 
@@ -192,6 +202,7 @@
                 Console.WriteLine(room.Id + " - " + room.Name);
             }
 
+            Console.Write("Room ID: ");
             string? roomIdInput = Console.ReadLine();
 
             if (!int.TryParse(roomIdInput, out int roomId))
@@ -211,83 +222,86 @@
                 }
             }
 
-            if (selectedRoom != null)
+            if (selectedRoom == null)
             {
-                string roomName = selectedRoom.Name;
+                Console.WriteLine("Room not found.");
+                return;
+            }
 
-                Console.WriteLine("Enter Your Name:");
-                string? bookedBy = Console.ReadLine();
+            string roomName = selectedRoom.Name;
 
-                if (string.IsNullOrWhiteSpace(bookedBy))
+            Console.Write("Enter Your Name: ");
+            string? bookedBy = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(bookedBy))
+            {
+                Console.WriteLine("Name cannot be empty.");
+                return;
+            }
+
+            Console.Write("Enter Date (dd-MM-yyyy): ");
+            string? dateInput = Console.ReadLine();
+
+            if (!DateTime.TryParseExact(dateInput, "dd-MM-yyyy", null, DateTimeStyles.None, out DateTime bookingDate))
+            {
+                Console.WriteLine("Invalid date. Please use format dd-MM-yyyy.");
+                return;
+            }
+
+            string date = bookingDate.ToString("dd-MM-yyyy");
+
+            Console.Write("Enter Start Time (HH:mm): ");
+            string? startInput = Console.ReadLine();
+
+            if (!TimeSpan.TryParse(startInput, out TimeSpan startTime))
+            {
+                Console.WriteLine("Invalid start time.");
+                return;
+            }
+
+            Console.Write("Enter End Time (HH:mm): ");
+            string? endInput = Console.ReadLine();
+
+            if (!TimeSpan.TryParse(endInput, out TimeSpan endTime))
+            {
+                Console.WriteLine("Invalid end time.");
+                return;
+            }
+
+            if (endTime <= startTime)
+            {
+                Console.WriteLine("End time must be later than start time.");
+                return;
+            }
+
+            bool alreadyBooked = false;
+
+            foreach (Booking booking in bookings)
+            {
+                if (booking.RoomName == roomName && booking.Date == date)
                 {
-                    Console.WriteLine("Name cannot be empty.");
-                    return;
-                }
-
-                Console.WriteLine("Enter Date:");
-                string? date = Console.ReadLine();
-
-                if (string.IsNullOrWhiteSpace(date))
-                {
-                    Console.WriteLine("Date cannot be empty.");
-                    return;
-                }
-
-                Console.WriteLine("Enter Start Time (HH:mm):");
-                string? startInput = Console.ReadLine();
-
-                if (!TimeSpan.TryParse(startInput, out TimeSpan startTime))
-                {
-                    Console.WriteLine("Invalid start time.");
-                    return;
-                }
-
-                Console.WriteLine("Enter End Time (HH:mm):");
-                string? endInput = Console.ReadLine();
-
-                if (!TimeSpan.TryParse(endInput, out TimeSpan endTime))
-                {
-                    Console.WriteLine("Invalid end time.");
-                    return;
-                }
-
-                if (endTime <= startTime)
-                {
-                    Console.WriteLine("End time must be later than start time.");
-                    return;
-                }
-
-                bool alreadyBooked = false;
-
-                foreach (Booking booking in bookings)
-                {
-                    if (booking.RoomName == roomName && booking.Date == date)
+                    if (startTime < booking.EndTime && endTime > booking.StartTime)
                     {
-                        if (startTime < booking.EndTime && endTime > booking.StartTime)
-                        {
-                            alreadyBooked = true;
-                            break;
-                        }
+                        alreadyBooked = true;
+                        break;
                     }
                 }
+            }
 
-                if (alreadyBooked)
-                {
-                    Console.WriteLine("This room is already booked on that date.");
-                }
-                else
-                {
-                    int bookingId = bookings.Count + 1;
-
-                    Booking newBooking = new Booking(bookingId, roomName, bookedBy, date, startTime, endTime);
-                    bookings.Add(newBooking);
-
-                    Console.WriteLine("Booking Added!");
-                }
+            if (alreadyBooked)
+            {
+                Console.WriteLine("This room is already booked on that date.");
             }
             else
             {
-                Console.WriteLine("Room not found.");
+                int bookingId = bookings.Count + 1;
+
+                Booking newBooking = new Booking(bookingId, roomName, bookedBy, date, startTime, endTime);
+                bookings.Add(newBooking);
+
+                Console.WriteLine("Booking added!");
+                Console.WriteLine();
+                ShowBookings(bookings);
             }
         }
     }
