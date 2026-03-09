@@ -133,29 +133,6 @@ namespace KN.UI
             }
         }
 
-        public static DateTime? DateSelection(string title, DateTime initialDate, int yearSpan)
-        {
-            DateTime datoValg = ConsoleHelpers.ChooseDateList($"{title}", initialDate, yearSpan);
-            Console.Clear();
-
-            string[] datoConfirmation =
-            {
-                                    "JA",
-                                    "NEJ",
-                                };
-
-            int confirmDato = ConsoleHelpers.ChooseFromList($"DATO: {datoValg.ToString("dd / MM / yyyy")}\n\nBEKRAEFT?", datoConfirmation);
-
-            if (confirmDato == 0)
-            {
-                return datoValg;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
         public static void StartNewBooking(BookingSystem system)
         {
 
@@ -168,26 +145,16 @@ namespace KN.UI
                 break;
             }
 
-            Moedelokale valgtMoedelokale = null;
+            (Moedelokale moedelokale, DateTime dato)? lokaleDato = null;
             while (true)
             {
-                valgtMoedelokale = MoedelokaleSelection(system);
-
-                if (valgtMoedelokale == null) continue;
-                break;
-
-            }
-
-            DateTime? datoValg = null;
-            while (true)
-            {
-                datoValg = DateSelection($"VAELG DATO:", DateTime.Today, 2);
-
-                if (datoValg == null) continue;
+                lokaleDato = ConsoleHelpers.PickRoomAndDate("VAELG LOKALE & DATO:", DateTime.Today, 2, system);
+                if (lokaleDato == null) continue;
                 break;
             }
 
-
+            Moedelokale valgtMoedelokale = lokaleDato.Value.moedelokale;
+            DateTime valgtDato = lokaleDato.Value.dato;
         }
     }
 }
