@@ -158,7 +158,7 @@ namespace KN.UI
 
             List<Booking> bookingsValgtLokaleDato = system.GetBookingMatchesMoedelokaleDato(valgtMoedelokale.moedelokaleId, valgtDato);
 
-            TimeSpan valgtTid = ConsoleHelpers.PickStartTidSlutTid(bookingsValgtLokaleDato, new TimeSpan(8,0,0), new TimeSpan(18,0,0));
+            (TimeSpan startTid, TimeSpan slutTid) = ConsoleHelpers.PickStartTidSlutTid(bookingsValgtLokaleDato, new TimeSpan(8,0,0), new TimeSpan(18,0,0));
         }
     }
 }

@@ -2,6 +2,7 @@
 using KN.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using static System.Net.WebRequestMethods;
 
@@ -311,7 +312,7 @@ namespace KN.UI
             }
         }
 
-        public static TimeSpan PickStartTidSlutTid(List<Booking> bookingsValgtLokaleDato, TimeSpan start, TimeSpan end)
+        public static (TimeSpan startTid, TimeSpan slutTid) PickStartTidSlutTid(List<Booking> bookingsValgtLokaleDato, TimeSpan start, TimeSpan end)
         {
             List<TimeSpan> ticks = new List<TimeSpan>();
             for (TimeSpan t = start; t <= end; t = t.Add(TimeSpan.FromMinutes(30)))
@@ -337,6 +338,8 @@ namespace KN.UI
             }
 
             int selectedIndex = 0;
+            int startIndex = -1;
+            int endIndex = -1;
             while (selectedIndex < blocked.Length && blocked[selectedIndex])
             {
                 selectedIndex++;
@@ -349,19 +352,28 @@ namespace KN.UI
                 for (int i = 0; i < ticks.Count; i++)
                 {
                         if (i == selectedIndex)
-                        {
-                            if (blocked[i] == true)
+                        {   
+                            if (i == startIndex || i == endIndex)
+                            {
+                                Console.WriteLine($">| + |{ticks[i]:hh\\:mm}  <");
+                            }
+                            else if (blocked[i] == true)
                             {
                                 Console.WriteLine($">| X |{ticks[i]:hh\\:mm}  <");
                             }
-                            else
+                            else 
                             {
                                 Console.WriteLine($">|   |{ticks[i]:hh\\:mm}  <");
                             }
+
                         }
                         else
                         {
-                            if (blocked[i] == true)
+                            if (i == startIndex || i == endIndex)
+                            {
+                                Console.WriteLine($" | + |{ticks[i]:hh\\:mm}  ");
+                            }
+                            else if (blocked[i] == true)
                             {
                                 Console.WriteLine($" | X |{ticks[i]:hh\\:mm}  ");
                             }
@@ -414,7 +426,44 @@ namespace KN.UI
 
                 if (key == ConsoleKey.Enter)
                 {
-                    return ticks[selectedIndex];
+                    if (startIndex == -1)
+                    {
+                        startIndex = selectedIndex;
+                    }
+                    else if (startIndex == selectedIndex)
+                    {
+                        startIndex = -1;
+                    }
+                    else if (endIndex == -1 && selectedIndex > startIndex)
+                    {
+                        endIndex = selectedIndex;
+                    }
+                    else if (endIndex == selectedIndex)
+                    {
+                        endIndex = -1;
+                    }
+
+                    if (startIndex != -1 && endIndex != -1)
+                    {
+                        Console.Clear();
+
+                        string[] tidConfirmation =
+                        {
+                               "JA",
+                               "NEJ",
+                        };
+
+                        int choiceConfirmTid = ConsoleHelpers.ChooseFromList($"STARTTID: {ticks[startIndex]:hh\\:mm}\nSLUTTID: {ticks[endIndex]:hh\\:mm} \n\nBEKRAEFT?", tidConfirmation);
+                        if (choiceConfirmTid == 0)
+                        {
+                            return (ticks[startIndex], ticks[endIndex]);
+                        }
+                        else
+                        {
+                            endIndex = -1;
+                            continue;
+                        }
+                    }
                 }
             }
         }
