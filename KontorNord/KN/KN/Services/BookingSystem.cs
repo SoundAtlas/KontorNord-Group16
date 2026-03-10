@@ -1,8 +1,9 @@
 ﻿using KN.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace KN.Services
 {
@@ -202,6 +203,27 @@ namespace KN.Services
         public List<Booking> GetBookings()
         {
             return bookings; 
+        }
+
+        public List<Booking> GetBookingMatchesForMedarbejder(int medarbejderId)
+        {
+            List<Booking> matches = new List<Booking>();
+
+            foreach (Booking booking in bookings)
+            {
+                if (booking.medarbejder.medarbejderId == medarbejderId)
+                {
+                    matches.Add(booking);
+                }
+            }
+
+            return matches;
+        }
+
+        public void DeleteBooking (Booking booking)
+        {
+            bookings.Remove(booking);
+            SaveBookingsToFile();
         }
     }
 }

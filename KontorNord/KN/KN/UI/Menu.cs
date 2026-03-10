@@ -20,6 +20,7 @@ namespace KN.UI
             {
                     "NY BOOKING",
                     "SE BOOKINGER",
+                    "SLET BOOKING",
                     "AFSLUT",
                     };
 
@@ -39,9 +40,13 @@ namespace KN.UI
 
                 else if (choice == 2)
                 {
-                    break;
+                    SletBooking(system);
                 }
 
+                else if (choice == 3)
+                {
+                    break;
+                }
             }
 
         }
@@ -256,6 +261,64 @@ namespace KN.UI
                 }
             }
             Console.ReadKey(true);
+        }
+
+        public static void SletBooking(BookingSystem system)
+        {
+            Medarbejder valgtMedarbejder = null;
+
+            while (true)
+            {
+                valgtMedarbejder = MedarbejderSelection(system);
+                if (valgtMedarbejder == null) continue;
+                break;
+            }
+
+           List<Booking> matches = system.GetBookingMatchesForMedarbejder(valgtMedarbejder.medarbejderId);
+           string[] options = new string[matches.Count];
+
+            for (int i = 0; i < matches.Count; i++)
+            {
+                options[i] =
+
+                        $"{matches[i].medarbejder.navn}\n{matches[i].moedelokale.navn}\n{matches[i].dato:dd/MM/yyyy}\n{matches[i].startTid:hh\\:mm} - {matches[i].slutTid:hh\\:mm}";
+            }
+
+            Console.Clear();
+
+            if (matches.Count == 0)
+            {
+                Console.WriteLine("INGEN BOOKINGER...");
+                Console.ReadKey(true);
+            }
+            else
+            {
+                int chosenIndex = ConsoleHelpers.ChooseFromList("VAELG BOOKING", options);
+                Booking chosenBooking = matches[chosenIndex];
+
+                Console.Clear();
+
+                string[] chosenIndexConfirmation =
+                {
+                               "JA",
+                               "NEJ",
+                };
+
+                int choiceChosenIndexConfirmation = ConsoleHelpers.ChooseFromList($"SLET BOOKING?\n\n{options[chosenIndex]}", chosenIndexConfirmation);
+
+                if (choiceChosenIndexConfirmation == 0)
+                {
+                    system.DeleteBooking(chosenBooking);
+                    
+                    Console.Clear();
+                    Console.WriteLine("BOOKING SLETTET");
+                    Console.ReadKey(true);
+                }
+                else
+                {
+                    return;
+                }
+            }
         }
     }
 }

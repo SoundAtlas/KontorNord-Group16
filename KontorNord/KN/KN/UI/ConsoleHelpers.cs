@@ -68,7 +68,7 @@ namespace KN.UI
 
 
                 }
-
+                
                 if (key == ConsoleKey.DownArrow || key == ConsoleKey.S)
                 {
                     selected++;
