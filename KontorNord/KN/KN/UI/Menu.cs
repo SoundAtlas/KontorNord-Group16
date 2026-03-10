@@ -192,18 +192,53 @@ namespace KN.UI
         public static void SeeBookings(BookingSystem system)
         {
             Moedelokale valgtMoedelokale = MoedelokaleSelectionList(system);
-            List<Booking> bookings = system.GetBookings();
 
+            string[] options =
+            {
+                "I DAG",
+                "DENNE UGE",
+                "ALLE",
+            };
+
+            int filterChoice = ConsoleHelpers.ChooseFromList("FILTRER:", options);
+
+            DateTime today = DateTime.Today;
+
+            DateTime rangeStart = today;   
+            DateTime rangeEnd = today;
+
+            if (filterChoice == 0)
+            {
+                rangeStart = today.Date;
+                rangeEnd = today.Date;
+            }
+            else if (filterChoice == 1)
+            {
+                int day = (int)today.DayOfWeek;
+                if (day == 0) day = 7;
+                int daysSinceMonday = day - 1;
+
+                rangeStart = today.AddDays(-daysSinceMonday).Date;
+                rangeEnd = rangeStart.AddDays(6).Date;
+            }
+            
+            List<Booking> bookings = system.GetBookings();
             List<Booking> matches = new List<Booking>();
 
             foreach (Booking booking in bookings)
             {
-                if (booking.moedelokale.moedelokaleId == valgtMoedelokale.moedelokaleId)
-                    
+                bool lokaleMatch = booking.moedelokale.moedelokaleId == valgtMoedelokale.moedelokaleId;
+
+                bool datoMatch =
+                    filterChoice == 2
+                    || (booking.dato.Date >= rangeStart && booking.dato.Date <= rangeEnd);
+
+                if (lokaleMatch && datoMatch)
                 {
                     matches.Add(booking);
                 }
             }
+                        
 
             Console.Clear();
             Console.WriteLine($"{valgtMoedelokale.navn}\n");
