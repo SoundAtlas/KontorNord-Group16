@@ -38,19 +38,18 @@ namespace KN.UI
 
             while (true)
             {
-                Console.Clear();
+                Console.SetCursorPosition(0, 0);
                 Console.WriteLine(title + "\n");
 
                 for (int i = 0; i < options.Length; i++)
                 {
                     if (i == selected)
                     {
-                        Console.WriteLine($"> {options[i]} <");
+                        Console.WriteLine($" [ {options[i]} ] ");
                     }
                     else
                     {
-                        Console.WriteLine($" {options[i]} ");
-
+                        Console.WriteLine($"   {options[i]}   ");
                     }
                 }
 
@@ -136,11 +135,11 @@ namespace KN.UI
 
             int yearMin = DateTime.Today.Year;
             int yearMax = yearMin + yearSpan;
-
+            Console.Clear();
             while (true)
             {
 
-                Console.Clear();
+                Console.SetCursorPosition(0, 0);
                 Console.WriteLine(title + "\n");
 
                 if (activeField == 0)
@@ -198,21 +197,21 @@ namespace KN.UI
                 {
                     if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
                     {
-                        roomIndex++;
+                        roomIndex--;
 
-                        if (roomIndex > lastRoomIndex)
+                        if (roomIndex < 0)
                         {
-                            roomIndex = 0;
+                            roomIndex = lastRoomIndex;
                         }
                     }
 
                     if (key == ConsoleKey.DownArrow || key == ConsoleKey.S)
                     {
-                        roomIndex--;
+                        roomIndex++;
                         
-                        if (roomIndex < 0)
+                        if (roomIndex > lastRoomIndex)
                         {
-                            roomIndex = lastRoomIndex;
+                            roomIndex = 0;
                         }
                     }
                 }
@@ -357,22 +356,22 @@ namespace KN.UI
             while (true)
             {
                 Console.Clear();
-
                 for (int i = 0; i < ticks.Count; i++)
                 {
+                    
                         if (i == selectedIndex)
                         {   
                             if (i == startIndex || i == endIndex)
                             {
-                                Console.WriteLine($">| + |{ticks[i]:hh\\:mm}  <");
+                                Console.WriteLine($"[| + |{ticks[i]:hh\\:mm}]");
                             }
                             else if (blocked[i] == true)
                             {
-                                Console.WriteLine($">| X |{ticks[i]:hh\\:mm}  <");
+                                Console.WriteLine($"[| X |{ticks[i]:hh\\:mm}]");
                             }
                             else 
                             {
-                                Console.WriteLine($">|   |{ticks[i]:hh\\:mm}  <");
+                                Console.WriteLine($"[|   |{ticks[i]:hh\\:mm}]");
                             }
 
                         }

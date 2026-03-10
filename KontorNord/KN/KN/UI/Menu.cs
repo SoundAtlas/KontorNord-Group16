@@ -83,7 +83,7 @@ namespace KN.UI
             {
                 Medarbejder? valgtMedarbejder = Menu.MedarbejderSelectionList(system);
                 if (valgtMedarbejder == null) return null;
-
+                Console.Clear();
                 string[] medarbejderConfirmation =
                 {
                         "JA",
