@@ -77,20 +77,20 @@ namespace KN.Services
 
         private void InitializeMoedelokaler()
         {
-            Moedelokale arcturus = new Moedelokale();
-            arcturus.moedelokaleId = 1;
-            arcturus.navn = "ARCTURUS";
-            moedelokaler.Add(arcturus);
+            Moedelokale lokaleA = new Moedelokale();
+            lokaleA.moedelokaleId = 1;
+            lokaleA.navn = "LOKALE A";
+            moedelokaler.Add(lokaleA);
 
-            Moedelokale betelgeuse = new Moedelokale();
-            betelgeuse.moedelokaleId = 2;
-            betelgeuse.navn = "BETELGEUSE";
-            moedelokaler.Add(betelgeuse);
+            Moedelokale lokaleB = new Moedelokale();
+            lokaleB.moedelokaleId = 2;
+            lokaleB.navn = "LOKALE B";
+            moedelokaler.Add(lokaleB);
 
-            Moedelokale canopus = new Moedelokale();
-            canopus.moedelokaleId = 3;
-            canopus.navn = "CANOPUS";
-            moedelokaler.Add(canopus);
+            Moedelokale lokaleC = new Moedelokale();
+            lokaleC.moedelokaleId = 3;
+            lokaleC.navn = "LOKALE C";
+            moedelokaler.Add(lokaleC);
         }
 
         private void InitializeBookings()

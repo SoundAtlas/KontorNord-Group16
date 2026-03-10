@@ -440,6 +440,16 @@ namespace KN.UI
                     {
                         endIndex = -1;
                     }
+                    else if (endIndex == -1 && selectedIndex <= startIndex)
+                    {
+                        endIndex = -1;
+
+                        Console.Clear();
+                        Console.WriteLine("SLUTTID KAN IKKE VAERE FOER STARTTID");
+                        Console.ReadKey();
+
+                        continue;
+                    }
 
                     if (startIndex != -1 && endIndex != -1)
                     {
@@ -454,6 +464,7 @@ namespace KN.UI
                         int choiceConfirmTid = ConsoleHelpers.ChooseFromList($"STARTTID: {ticks[startIndex]:hh\\:mm}\nSLUTTID: {ticks[endIndex]:hh\\:mm} \n\nBEKRAEFT?", tidConfirmation);
                         if (choiceConfirmTid == 0)
                         {
+
                             return (ticks[startIndex], ticks[endIndex]);
                         }
                         else

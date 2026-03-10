@@ -224,7 +224,7 @@ namespace KN.UI
             
             List<Booking> bookings = system.GetBookings();
             List<Booking> matches = new List<Booking>();
-
+            
             foreach (Booking booking in bookings)
             {
                 bool lokaleMatch = booking.moedelokale.moedelokaleId == valgtMoedelokale.moedelokaleId;
@@ -239,7 +239,7 @@ namespace KN.UI
                 }
             }
                         
-
+           
             Console.Clear();
             Console.WriteLine($"{valgtMoedelokale.navn}\n");
             
