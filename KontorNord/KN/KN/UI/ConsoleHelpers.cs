@@ -2,6 +2,7 @@
 using KN.Services;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using static System.Net.WebRequestMethods;
@@ -436,7 +437,7 @@ namespace KN.UI
                         }
                     }
                 }
-
+                
                 if (key == ConsoleKey.Enter)
                 {
                     if (startIndex == -1)
@@ -449,7 +450,33 @@ namespace KN.UI
                     }
                     else if (endIndex == -1 && selectedIndex > startIndex)
                     {
-                        endIndex = selectedIndex;
+                        TimeSpan startTime = ticks[startIndex];
+                        TimeSpan proposedEnd = ticks[selectedIndex];
+
+                        bool conflict = false;
+
+                        foreach (Booking b in bookingsValgtLokaleDato)
+                        {
+                            if (startTime < b.slutTid && proposedEnd > b.startTid)
+                            {
+                                conflict = true;
+                                break;
+                            }
+                        }
+                        
+                        if (conflict == true)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("ANDRE BOOKINGER KAN IKKE OVERLAPPES");
+                            Console.ReadKey();
+
+                            continue;
+                        }
+                        else
+                        {
+                            endIndex = selectedIndex;
+                        }
+                        
                     }
                     else if (endIndex == selectedIndex)
                     {
