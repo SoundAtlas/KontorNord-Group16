@@ -36,7 +36,7 @@ namespace KN.UI
         public static int? ChooseFromListOrCancel(string title, string[] options)
         {
             int selected = 0;
-
+            Console.CursorVisible = false;
             while (true)
             {
                 Console.SetCursorPosition(0, 0);

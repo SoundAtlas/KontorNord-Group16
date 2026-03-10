@@ -56,7 +56,7 @@ namespace KN.UI
 
         }
 
-        public static Medarbejder? MedarbejderSelectionList(BookingSystem system)
+        public static Medarbejder? MedarbejderSelection(BookingSystem system)
         {
             List<Medarbejder> medarbejdere = system.GetMedarbejdere();
             string[] options = new string[medarbejdere.Count];
@@ -77,38 +77,7 @@ namespace KN.UI
 
         }
 
-        public static Medarbejder? MedarbejderSelection(BookingSystem system)
-        {
-            while (true)
-            {
-                Medarbejder? valgtMedarbejder = Menu.MedarbejderSelectionList(system);
-                if (valgtMedarbejder == null) return null;
-                Console.Clear();
-                string[] medarbejderConfirmation =
-                {
-                        "JA",
-                        "NEJ",
-                };
-
-
-                int? choiceConfirmMedarbejder = ConsoleHelpers.ChooseFromListOrCancel($"MEDARBEJDER: {valgtMedarbejder.navn}\n\nBEKRAEFT?", medarbejderConfirmation);
-
-                if (choiceConfirmMedarbejder == null)
-                { 
-                    return null; 
-                }
-                if (choiceConfirmMedarbejder == 0)
-                {
-                    return valgtMedarbejder;
-                }
-                if (choiceConfirmMedarbejder == 1)
-                {
-                    continue;
-                }
-            }
-        }
-
-        public static Moedelokale? MoedelokaleSelectionList(BookingSystem system)
+        public static Moedelokale? MoedelokaleSelection(BookingSystem system)
         {
             List<Moedelokale> moedelokaler = system.GetMoedelokaler();
             string[] options = new string[moedelokaler.Count];
@@ -126,34 +95,6 @@ namespace KN.UI
 
             int idx = selectedIndex.Value;
             return moedelokaler[idx];
-        }
-
-        public static Moedelokale? MoedelokaleSelection(BookingSystem system)
-        {
-            Moedelokale? valgtMoedelokale = Menu.MoedelokaleSelectionList(system);
-            if (valgtMoedelokale == null) return null;
-
-            Console.Clear();
-            Console.WriteLine($"{valgtMoedelokale.navn}");
-
-            Console.Clear();
-
-            string[] moedelokaleConfirmation =
-            {
-                               "JA",
-                               "NEJ",
-                            };
-
-            int? choiceConfirmMoedelokale = ConsoleHelpers.ChooseFromListOrCancel($"MOEDELOKALE: {valgtMoedelokale.navn}\n\nBEKRAEFT?", moedelokaleConfirmation);
-
-            if (choiceConfirmMoedelokale == 0)
-            {
-                return valgtMoedelokale;
-            }
-            else
-            {
-                return null;
-            }
         }
 
         public static void StartNewBooking(BookingSystem system)
@@ -224,7 +165,7 @@ namespace KN.UI
 
         public static void SeeBookings(BookingSystem system)
         {
-            Moedelokale? valgtMoedelokale = MoedelokaleSelectionList(system);
+            Moedelokale? valgtMoedelokale = MoedelokaleSelection(system);
             if (valgtMoedelokale == null) return;
 
             string[] options =
@@ -361,6 +302,18 @@ namespace KN.UI
                     }
                     else return;
                 }
+            }
+        }
+
+        public static void RedigerBooking(BookingSystem system)
+        {
+            Medarbejder? valgtMedarbejder = null;
+
+            while (true)
+            {
+                valgtMedarbejder = MedarbejderSelection(system);
+                if (valgtMedarbejder == null) return;
+                break;
             }
         }
     }

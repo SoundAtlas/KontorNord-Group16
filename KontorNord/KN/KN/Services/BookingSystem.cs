@@ -220,10 +220,12 @@ namespace KN.Services
             return matches;
         }
 
-        public void DeleteBooking (Booking booking)
+        public void DeleteBooking(Booking booking)
         {
             bookings.Remove(booking);
             SaveBookingsToFile();
         }
+
+        
     }
 }
