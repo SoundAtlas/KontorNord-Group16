@@ -32,7 +32,7 @@ namespace KN.UI
             }
         }
         
-        public static int ChooseFromList(string title, string[] options)
+        public static int? ChooseFromListOrCancel(string title, string[] options)
         {
             int selected = 0;
 
@@ -56,6 +56,9 @@ namespace KN.UI
 
                 var key = Console.ReadKey(true).Key;
                 int lastIndex = options.Length - 1;
+
+                if (key == ConsoleKey.Escape)
+                    return null;
 
                 if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
                 {
@@ -83,6 +86,8 @@ namespace KN.UI
                 {
                     return selected;
                 }
+
+                
             }
         }
 
@@ -134,6 +139,7 @@ namespace KN.UI
 
             while (true)
             {
+
                 Console.Clear();
                 Console.WriteLine(title + "\n");
 
@@ -161,6 +167,11 @@ namespace KN.UI
                 int lastMonth = 12;
                 int lastDay = DateTime.DaysInMonth(year, month);
                 int lastYear = yearMax;
+
+                if (key == ConsoleKey.Escape)
+                {
+                    return null;
+                }
 
                 if (key == ConsoleKey.LeftArrow || key == ConsoleKey.A)
                 {
@@ -310,7 +321,7 @@ namespace KN.UI
             }
         }
 
-        public static (TimeSpan startTid, TimeSpan slutTid) PickStartTidSlutTid(List<Booking> bookingsValgtLokaleDato, TimeSpan start, TimeSpan end)
+        public static (TimeSpan startTid, TimeSpan slutTid)? PickStartTidSlutTid(List<Booking> bookingsValgtLokaleDato, TimeSpan start, TimeSpan end)
         {
             List<TimeSpan> ticks = new List<TimeSpan>();
             for (TimeSpan t = start; t <= end; t = t.Add(TimeSpan.FromMinutes(30)))
@@ -385,6 +396,11 @@ namespace KN.UI
 
                 var key = Console.ReadKey(true).Key;
                 int lastIndex = ticks.Count - 1;
+                
+                if (key == ConsoleKey.Escape)
+                {
+                    return null;
+                }
 
                 if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
                 {
@@ -461,7 +477,8 @@ namespace KN.UI
                                "NEJ",
                         };
 
-                        int choiceConfirmTid = ConsoleHelpers.ChooseFromList($"STARTTID: {ticks[startIndex]:hh\\:mm}\nSLUTTID: {ticks[endIndex]:hh\\:mm} \n\nBEKRAEFT?", tidConfirmation);
+                        int? choiceConfirmTid = ConsoleHelpers.ChooseFromListOrCancel($"STARTTID: {ticks[startIndex]:hh\\:mm}\nSLUTTID: {ticks[endIndex]:hh\\:mm} \n\nBEKRAEFT?", tidConfirmation);
+                        
                         if (choiceConfirmTid == 0)
                         {
 

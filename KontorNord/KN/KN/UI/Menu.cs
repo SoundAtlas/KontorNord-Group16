@@ -26,7 +26,12 @@ namespace KN.UI
 
             while (true)
             {
-                int choice = ConsoleHelpers.ChooseFromList("HOVEDMENU", menuMain);
+                int? choice = ConsoleHelpers.ChooseFromListOrCancel("HOVEDMENU", menuMain);
+
+                if (choice == null)
+                {
+                    return;
+                }
 
                 if (choice == 0)
                 {
@@ -50,7 +55,8 @@ namespace KN.UI
             }
 
         }
-        public static Medarbejder MedarbejderSelectionList(BookingSystem system)
+
+        public static Medarbejder? MedarbejderSelectionList(BookingSystem system)
         {
             List<Medarbejder> medarbejdere = system.GetMedarbejdere();
             string[] options = new string[medarbejdere.Count];
@@ -60,43 +66,49 @@ namespace KN.UI
                 options[i] = $"{medarbejdere[i].medarbejderId}. {medarbejdere[i].navn}";
             }
 
-            int selectedIndex = ConsoleHelpers.ChooseFromList("VAELG MEDARBEJDER:", options);
-
-            return medarbejdere[selectedIndex];
-
-        }
-
-        public static Medarbejder MedarbejderSelection(BookingSystem system)
-        {
-            Medarbejder valgtMedarbejder = Menu.MedarbejderSelectionList(system);
-
-            Console.Clear();
-            Console.WriteLine($"{valgtMedarbejder.navn}");
-
-            Console.Clear();
-
-            string[] medarbejderConfirmation =
-            {
-                        "JA",
-                        "NEJ",
-                    };
-
-
-            int choiceConfirmMedarbejder = ConsoleHelpers.ChooseFromList($"MEDARBEJDER: {valgtMedarbejder.navn}\n\nBEKRAEFT?", medarbejderConfirmation);
-
-            if (choiceConfirmMedarbejder == 0)
-            {
-                return valgtMedarbejder;
-            }
-
-            else
+            int? selectedIndex = ConsoleHelpers.ChooseFromListOrCancel("VAELG MEDARBEJDER:", options);
+            if (selectedIndex == null)
             {
                 return null;
             }
 
+            int idx = selectedIndex.Value;
+            return medarbejdere[idx];
+
         }
 
-        public static Moedelokale MoedelokaleSelectionList(BookingSystem system)
+        public static Medarbejder? MedarbejderSelection(BookingSystem system)
+        {
+            while (true)
+            {
+                Medarbejder? valgtMedarbejder = Menu.MedarbejderSelectionList(system);
+                if (valgtMedarbejder == null) return null;
+
+                string[] medarbejderConfirmation =
+                {
+                        "JA",
+                        "NEJ",
+                };
+
+
+                int? choiceConfirmMedarbejder = ConsoleHelpers.ChooseFromListOrCancel($"MEDARBEJDER: {valgtMedarbejder.navn}\n\nBEKRAEFT?", medarbejderConfirmation);
+
+                if (choiceConfirmMedarbejder == null)
+                { 
+                    return null; 
+                }
+                if (choiceConfirmMedarbejder == 0)
+                {
+                    return valgtMedarbejder;
+                }
+                if (choiceConfirmMedarbejder == 1)
+                {
+                    continue;
+                }
+            }
+        }
+
+        public static Moedelokale? MoedelokaleSelectionList(BookingSystem system)
         {
             List<Moedelokale> moedelokaler = system.GetMoedelokaler();
             string[] options = new string[moedelokaler.Count];
@@ -106,13 +118,20 @@ namespace KN.UI
                 options[i] = $"{moedelokaler[i].moedelokaleId}. {moedelokaler[i].navn}";
             }
 
-            int selectedIndex = ConsoleHelpers.ChooseFromList("VAELG MOEDELOKALE:", options);
-            return moedelokaler[selectedIndex];
+            int? selectedIndex = ConsoleHelpers.ChooseFromListOrCancel("VAELG MOEDELOKALE:", options);
+            if (selectedIndex == null)
+            {
+                return null;
+            }
+
+            int idx = selectedIndex.Value;
+            return moedelokaler[idx];
         }
 
-        public static Moedelokale MoedelokaleSelection(BookingSystem system)
+        public static Moedelokale? MoedelokaleSelection(BookingSystem system)
         {
-            Moedelokale valgtMoedelokale = Menu.MoedelokaleSelectionList(system);
+            Moedelokale? valgtMoedelokale = Menu.MoedelokaleSelectionList(system);
+            if (valgtMoedelokale == null) return null;
 
             Console.Clear();
             Console.WriteLine($"{valgtMoedelokale.navn}");
@@ -125,7 +144,7 @@ namespace KN.UI
                                "NEJ",
                             };
 
-            int choiceConfirmMoedelokale = ConsoleHelpers.ChooseFromList($"MOEDELOKALE: {valgtMoedelokale.navn}\n\nBEKRAEFT?", moedelokaleConfirmation);
+            int? choiceConfirmMoedelokale = ConsoleHelpers.ChooseFromListOrCancel($"MOEDELOKALE: {valgtMoedelokale.navn}\n\nBEKRAEFT?", moedelokaleConfirmation);
 
             if (choiceConfirmMoedelokale == 0)
             {
@@ -139,12 +158,13 @@ namespace KN.UI
 
         public static void StartNewBooking(BookingSystem system)
         {
-            Medarbejder valgtMedarbejder = null;
+            Medarbejder? valgtMedarbejder = null;
             while (true)
             {
+
                 valgtMedarbejder = MedarbejderSelection(system);
 
-                if (valgtMedarbejder == null) continue;
+                if (valgtMedarbejder == null) return;
                 break;
             }
 
@@ -152,17 +172,23 @@ namespace KN.UI
             while (true)
             {
                 lokaleDato = ConsoleHelpers.PickRoomAndDate("VAELG LOKALE & DATO:", DateTime.Today, 2, system);
-                if (lokaleDato == null) continue;
+                if (lokaleDato == null) return;
                 break;
             }
 
-            Moedelokale valgtMoedelokale = lokaleDato.Value.moedelokale;
+            Moedelokale? valgtMoedelokale = lokaleDato.Value.moedelokale;
             DateTime valgtDato = lokaleDato.Value.dato;
 
             List<Booking> bookingsValgtLokaleDato = system.GetBookingMatchesMoedelokaleDato(valgtMoedelokale.moedelokaleId, valgtDato);
 
-            (TimeSpan startTid, TimeSpan slutTid) = ConsoleHelpers.PickStartTidSlutTid(bookingsValgtLokaleDato, new TimeSpan(8,0,0), new TimeSpan(18,0,0));
-
+            var tidValg = ConsoleHelpers.PickStartTidSlutTid(bookingsValgtLokaleDato, new TimeSpan(8,0,0), new TimeSpan(18,0,0));
+            if (tidValg == null)
+            {
+                return;
+            }
+            
+            (TimeSpan startTid, TimeSpan slutTid) = tidValg.Value;
+            
             Console.Clear();
 
             string[] bookingConfirmation =
@@ -171,7 +197,9 @@ namespace KN.UI
                         "NEJ",
             };
 
-            int choiceConfirmBooking = ConsoleHelpers.ChooseFromList($"BOOKING:\n{valgtMoedelokale.navn}\n{valgtDato:dd/MM/yyyy}\n{startTid:hh\\:mm} - {slutTid:hh\\:mm}\n\nBEKRAEFT?", bookingConfirmation);
+            int? choiceConfirmBooking = ConsoleHelpers.ChooseFromListOrCancel($"BOOKING:\n{valgtMoedelokale.navn}\n{valgtDato:dd/MM/yyyy}\n{startTid:hh\\:mm} - {slutTid:hh\\:mm}\n\nBEKRAEFT?", bookingConfirmation);
+            if (choiceConfirmBooking == null) return;
+
             if (choiceConfirmBooking == 0)
             {
                 Booking booking = new Booking();
@@ -196,7 +224,8 @@ namespace KN.UI
 
         public static void SeeBookings(BookingSystem system)
         {
-            Moedelokale valgtMoedelokale = MoedelokaleSelectionList(system);
+            Moedelokale? valgtMoedelokale = MoedelokaleSelectionList(system);
+            if (valgtMoedelokale == null) return;
 
             string[] options =
             {
@@ -205,7 +234,8 @@ namespace KN.UI
                 "ALLE",
             };
 
-            int filterChoice = ConsoleHelpers.ChooseFromList("FILTRER:", options);
+            int? filterChoice = ConsoleHelpers.ChooseFromListOrCancel("FILTRER:", options);
+            if (filterChoice == null) return;
 
             DateTime today = DateTime.Today;
 
@@ -265,58 +295,71 @@ namespace KN.UI
 
         public static void SletBooking(BookingSystem system)
         {
-            Medarbejder valgtMedarbejder = null;
+            Medarbejder? valgtMedarbejder = null;
 
             while (true)
             {
                 valgtMedarbejder = MedarbejderSelection(system);
-                if (valgtMedarbejder == null) continue;
+                if (valgtMedarbejder == null) return;
                 break;
             }
 
-           List<Booking> matches = system.GetBookingMatchesForMedarbejder(valgtMedarbejder.medarbejderId);
-           string[] options = new string[matches.Count];
+            while (true)
+            { 
+               List<Booking> matches = system.GetBookingMatchesForMedarbejder(valgtMedarbejder.medarbejderId);
+               string[] options = new string[matches.Count];
 
-            for (int i = 0; i < matches.Count; i++)
-            {
-                options[i] =
+                for (int i = 0; i < matches.Count; i++)
+                {
+                    options[i] =
 
                         $"{matches[i].medarbejder.navn}\n{matches[i].moedelokale.navn}\n{matches[i].dato:dd/MM/yyyy}\n{matches[i].startTid:hh\\:mm} - {matches[i].slutTid:hh\\:mm}";
-            }
-
-            Console.Clear();
-
-            if (matches.Count == 0)
-            {
-                Console.WriteLine("INGEN BOOKINGER...");
-                Console.ReadKey(true);
-            }
-            else
-            {
-                int chosenIndex = ConsoleHelpers.ChooseFromList("VAELG BOOKING", options);
-                Booking chosenBooking = matches[chosenIndex];
+                }
 
                 Console.Clear();
 
-                string[] chosenIndexConfirmation =
+                if (matches.Count == 0)
                 {
-                               "JA",
-                               "NEJ",
-                };
-
-                int choiceChosenIndexConfirmation = ConsoleHelpers.ChooseFromList($"SLET BOOKING?\n\n{options[chosenIndex]}", chosenIndexConfirmation);
-
-                if (choiceChosenIndexConfirmation == 0)
-                {
-                    system.DeleteBooking(chosenBooking);
-                    
-                    Console.Clear();
-                    Console.WriteLine("BOOKING SLETTET");
+                    Console.WriteLine("INGEN BOOKINGER...");
                     Console.ReadKey(true);
+                    return;
                 }
                 else
                 {
-                    return;
+                    int? chosenIndex = ConsoleHelpers.ChooseFromListOrCancel("VAELG BOOKING", options);
+
+                    if (chosenIndex == null)
+                    {
+                        return;
+                    }
+
+                    int idx = chosenIndex.Value;
+
+                    Booking chosenBooking = matches[idx];
+
+                    Console.Clear();
+
+                    string[] chosenIndexConfirmation =
+                    {
+                               "JA",
+                               "NEJ",
+                    };
+
+                    int? choiceChosenIndexConfirmation = ConsoleHelpers.ChooseFromListOrCancel($"SLET BOOKING?\n\n{options[idx]}", chosenIndexConfirmation);
+
+                    if (choiceChosenIndexConfirmation == null)
+                    {
+                        return;
+                    }
+                    if (choiceChosenIndexConfirmation == 0)
+                    {
+                        system.DeleteBooking(chosenBooking);
+
+                        Console.Clear();
+                        Console.WriteLine("BOOKING SLETTET");
+                        Console.ReadKey(true);
+                    }
+                    else return;
                 }
             }
         }
