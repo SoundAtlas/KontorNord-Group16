@@ -79,17 +79,17 @@ namespace KN.Services
         {
             Moedelokale arcturus = new Moedelokale();
             arcturus.moedelokaleId = 1;
-            arcturus.navn = "Arcturus";
+            arcturus.navn = "ARCTURUS";
             moedelokaler.Add(arcturus);
 
             Moedelokale betelgeuse = new Moedelokale();
             betelgeuse.moedelokaleId = 2;
-            betelgeuse.navn = "Betelgeuse";
+            betelgeuse.navn = "BETELGEUSE";
             moedelokaler.Add(betelgeuse);
 
             Moedelokale canopus = new Moedelokale();
             canopus.moedelokaleId = 3;
-            canopus.navn = "Canopus";
+            canopus.navn = "CANOPUS";
             moedelokaler.Add(canopus);
         }
 
@@ -197,6 +197,11 @@ namespace KN.Services
 
                 bookings.Add(b);
             }
+        }
+
+        public List<Booking> GetBookings()
+        {
+            return bookings; 
         }
     }
 }

@@ -6,6 +6,8 @@ using System.ComponentModel.Design;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading;
+using System.Xml.Serialization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace KN.UI
 {
@@ -32,11 +34,7 @@ namespace KN.UI
 
                 else if (choice == 1)
                 {
-                    Moedelokale valgtMoedelokale = Menu.MoedelokaleSelection(system);
-
-                    Console.Clear();
-                    Console.WriteLine($"{valgtMoedelokale.navn}");
-                    Console.ReadKey();
+                    SeeBookings(system);
                 }
 
                 else if (choice == 2)
@@ -189,6 +187,40 @@ namespace KN.UI
             {
                 return;
             }
+        }
+
+        public static void SeeBookings(BookingSystem system)
+        {
+            Moedelokale valgtMoedelokale = MoedelokaleSelectionList(system);
+            List<Booking> bookings = system.GetBookings();
+
+            List<Booking> matches = new List<Booking>();
+
+            foreach (Booking booking in bookings)
+            {
+                if (booking.moedelokale.moedelokaleId == valgtMoedelokale.moedelokaleId)
+                    
+                {
+                    matches.Add(booking);
+                }
+            }
+
+            Console.Clear();
+            Console.WriteLine($"{valgtMoedelokale.navn}\n");
+            
+            if (matches.Count == 0)
+            {
+                Console.WriteLine("INGEN BOOKINGER...");
+            }
+            else
+            {
+                Console.WriteLine("BOOKINGER:");
+                foreach (Booking booking in matches)
+                {
+                    Console.WriteLine($"\n{booking.dato:dd/MM/yyyy}\n{booking.startTid:hh\\:mm} - {booking.slutTid:hh\\:mm}\n{booking.medarbejder.navn}");
+                }
+            }
+            Console.ReadKey(true);
         }
     }
 }
