@@ -46,7 +46,7 @@ namespace KN.UI
                 {
                     if (i == selected)
                     {
-                        Console.WriteLine($" [ {options[i]} ] ");
+                        Console.WriteLine($" > {options[i]}  ");
                     }
                     else
                     {
@@ -58,7 +58,10 @@ namespace KN.UI
                 int lastIndex = options.Length - 1;
 
                 if (key == ConsoleKey.Escape)
+                {
+                    Console.Clear();
                     return null;
+                }
 
                 if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
                 {
@@ -136,29 +139,38 @@ namespace KN.UI
 
             int yearMin = DateTime.Today.Year;
             int yearMax = yearMin + yearSpan;
+            
             Console.Clear();
+            
             while (true)
             {
 
                 Console.SetCursorPosition(0, 0);
-                Console.WriteLine(title + "\n");
+                Console.WriteLine((title + "\n").PadRight(50));
+
+                string line = "";
 
                 if (activeField == 0)
                 {
-                    Console.WriteLine($"[{moedelokaler[roomIndex].navn}] / {day} / {month} / {year}");
+                    line = $" > {moedelokaler[roomIndex].navn} /  {day} /  {month} /  {year}";
                 }
+                
                 if (activeField == 1)
                 {
-                    Console.WriteLine($"{moedelokaler[roomIndex].navn} / [{day}] / {month} / {year}");
+                    line = $"   {moedelokaler[roomIndex].navn} /> {day} /  {month} /  {year}";
                 }
+                
                 if (activeField == 2)
                 {
-                    Console.WriteLine($"{moedelokaler[roomIndex].navn} / {day} / [{month}] / {year}");
+                    line = $"   {moedelokaler[roomIndex].navn} /  {day} /> {month} /  {year}";
                 }
+               
                 if (activeField == 3)
                 {
-                    Console.WriteLine($"{moedelokaler[roomIndex].navn} / {day} / {month} / [{year}]");
+                    line = $"   {moedelokaler[roomIndex].navn} /  {day} /  {month} /> {year}";
                 }
+
+                Console.WriteLine(line.PadRight(50));
 
                 var key = Console.ReadKey(true).Key;
 
@@ -374,15 +386,15 @@ namespace KN.UI
                         {   
                             if (i == startIndex || i == endIndex)
                             {
-                                Console.WriteLine($"[| + |{ticks[i]:hh\\:mm}]");
+                                Console.WriteLine($">| + |{ticks[i]:hh\\:mm}");
                             }
                             else if (blocked[i] == true)
                             {
-                                Console.WriteLine($"[| X |{ticks[i]:hh\\:mm}]");
+                                Console.WriteLine($">| X |{ticks[i]:hh\\:mm}");
                             }
                             else 
                             {
-                                Console.WriteLine($"[|   |{ticks[i]:hh\\:mm}]");
+                                Console.WriteLine($">|   |{ticks[i]:hh\\:mm}");
                             }
 
                         }
@@ -390,15 +402,15 @@ namespace KN.UI
                         {
                             if (i == startIndex || i == endIndex)
                             {
-                                Console.WriteLine($" | + |{ticks[i]:hh\\:mm}  ");
+                                Console.WriteLine($" | + |{ticks[i]:hh\\:mm}");
                             }
                             else if (blocked[i] == true)
                             {
-                                Console.WriteLine($" | X |{ticks[i]:hh\\:mm}  ");
+                                Console.WriteLine($" | X |{ticks[i]:hh\\:mm}");
                             }
                             else
                             {
-                                Console.WriteLine($" |   |{ticks[i]:hh\\:mm}  ");
+                                Console.WriteLine($" |   |{ticks[i]:hh\\:mm}");
                             }
                         }
 

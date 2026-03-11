@@ -151,7 +151,6 @@ namespace KN.Services
                     dato = b.dato.Date,
                     startMinutes = (int)b.startTid.TotalMinutes,
                     slutMinutes = (int)b.slutTid.TotalMinutes,
-                    note = b.note ?? ""
                 });
             }
 
@@ -194,7 +193,6 @@ namespace KN.Services
                 b.dato = s.dato.Date;
                 b.startTid = TimeSpan.FromMinutes(s.startMinutes);
                 b.slutTid = TimeSpan.FromMinutes(s.slutMinutes);
-                b.note = s.note ?? "";
 
                 bookings.Add(b);
             }

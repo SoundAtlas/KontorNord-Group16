@@ -15,11 +15,11 @@ namespace KN.UI
     {
         public static void MenuMain(BookingSystem system)
         {
-
             string[] menuMain =
             {
                     "NY BOOKING",
                     "SE BOOKINGER",
+                    "REDIGER BOOKING",
                     "SLET BOOKING",
                     "AFSLUT",
                     };
@@ -45,10 +45,15 @@ namespace KN.UI
 
                 else if (choice == 2)
                 {
-                    SletBooking(system);
+                    RedigerBooking(system);
                 }
 
                 else if (choice == 3)
+                {
+                    SletBooking(system);
+                }
+
+                else if (choice == 4)
                 {
                     break;
                 }
@@ -109,6 +114,8 @@ namespace KN.UI
                 break;
             }
 
+            Console.Clear();
+
             (Moedelokale moedelokale, DateTime dato)? lokaleDato = null;
             while (true)
             {
@@ -116,7 +123,7 @@ namespace KN.UI
                 if (lokaleDato == null) return;
                 break;
             }
-
+            
             Moedelokale? valgtMoedelokale = lokaleDato.Value.moedelokale;
             DateTime valgtDato = lokaleDato.Value.dato;
 
@@ -165,8 +172,12 @@ namespace KN.UI
 
         public static void SeeBookings(BookingSystem system)
         {
+            Console.Clear();
+
             Moedelokale? valgtMoedelokale = MoedelokaleSelection(system);
             if (valgtMoedelokale == null) return;
+
+            Console.Clear();
 
             string[] options =
             {
@@ -215,8 +226,12 @@ namespace KN.UI
                 }
             }
 
-
             Console.Clear();
+            matches = matches
+            .OrderBy(b => b.dato)
+            .ThenBy(b => b.startTid)
+            .ToList();
+
             Console.WriteLine($"{valgtMoedelokale.navn}\n");
 
             if (matches.Count == 0)
@@ -228,10 +243,15 @@ namespace KN.UI
                 Console.WriteLine("BOOKINGER:");
                 foreach (Booking booking in matches)
                 {
-                    Console.WriteLine($"\n{booking.dato:dd/MM/yyyy}\n{booking.startTid:hh\\:mm} - {booking.slutTid:hh\\:mm}\n{booking.medarbejder.navn}");
+                    Console.WriteLine("\n╔══");
+                    Console.WriteLine($"║{booking.dato:dd/MM/yyyy}");
+                    Console.WriteLine($"║{booking.startTid:hh\\:mm} - {booking.slutTid:hh\\:mm}"); 
+                    Console.WriteLine($"║{booking.medarbejder.navn}");
+                    Console.WriteLine("╚══");
                 }
             }
             Console.ReadKey(true);
+            Console.Clear();
         }
 
         public static void SletBooking(BookingSystem system)
@@ -254,7 +274,7 @@ namespace KN.UI
                 {
                     options[i] =
 
-                        $"{matches[i].medarbejder.navn}\n{matches[i].moedelokale.navn}\n{matches[i].dato:dd/MM/yyyy}\n{matches[i].startTid:hh\\:mm} - {matches[i].slutTid:hh\\:mm}";
+                        $"╔══\n   ║ {matches[i].medarbejder.navn}\n   ║ {matches[i].moedelokale.navn}\n   ║ {matches[i].dato:dd/MM/yyyy}\n   ║ {matches[i].startTid:hh\\:mm} - {matches[i].slutTid:hh\\:mm}\n   ╚══";
                 }
 
                 Console.Clear();
@@ -286,7 +306,7 @@ namespace KN.UI
                                "NEJ",
                     };
 
-                    int? choiceChosenIndexConfirmation = ConsoleHelpers.ChooseFromListOrCancel($"SLET BOOKING?\n\n{options[idx]}", chosenIndexConfirmation);
+                    int? choiceChosenIndexConfirmation = ConsoleHelpers.ChooseFromListOrCancel($"SLET BOOKING?", chosenIndexConfirmation);
 
                     if (choiceChosenIndexConfirmation == null)
                     {
@@ -307,66 +327,117 @@ namespace KN.UI
 
         public static void RedigerBooking(BookingSystem system)
         {
-            Medarbejder? valgtMedarbejder = null;
+            Medarbejder? valgtMedarbejder = valgtMedarbejder = MedarbejderSelection(system);
 
-            while (true)
+            if (valgtMedarbejder == null)
             {
-                valgtMedarbejder = MedarbejderSelection(system);
-                if (valgtMedarbejder == null) return;
-                break;
+                return; 
             }
 
+            Console.Clear();
+
             List<Booking> matches = system.GetBookingMatchesForMedarbejder(valgtMedarbejder.medarbejderId);
+
+            if (matches.Count == 0)
+            {
+                Console.Clear();
+                Console.WriteLine("INGEN BOOKINGER...");
+                Console.ReadKey(true);
+                return;
+            }
+
             string[] options = new string[matches.Count];
 
             for (int i = 0; i < matches.Count; i++)
             {
                 options[i] =
 
-                    $"{matches[i].medarbejder.navn}\n{matches[i].moedelokale.navn}\n{matches[i].dato:dd/MM/yyyy}\n{matches[i].startTid:hh\\:mm} - {matches[i].slutTid:hh\\:mm}";
+                    $"╔══\n   ║ {matches[i].medarbejder.navn}\n   ║ {matches[i].moedelokale.navn}\n   ║ {matches[i].dato:dd/MM/yyyy}\n   ║ {matches[i].startTid:hh\\:mm} - {matches[i].slutTid:hh\\:mm}\n   ╚══";
+                  
+            }
+
+            int? chosenIndex = ConsoleHelpers.ChooseFromListOrCancel("VAELG BOOKING", options);
+            if (chosenIndex == null || chosenIndex == 2)
+            {
+               return;
             }
 
             Console.Clear();
 
-            if (matches.Count == 0)
-            {
-                Console.WriteLine("INGEN BOOKINGER...");
-                Console.ReadKey(true);
-                return;
-            }
-            else
-            {
-                int? chosenIndex = ConsoleHelpers.ChooseFromListOrCancel("VAELG BOOKING", options);
-
-                if (chosenIndex == null)
-                {
-                    return;
-                }
-
-                int idx = chosenIndex.Value;
-
-                Booking chosenBooking = matches[idx];
-            }
+            Booking chosenBooking = matches[chosenIndex.Value];
 
             string[] editSelection =
-                {
-                               "LOKALE/DATO",
-                               "TID",
-                               "ANNULLER",
-                    };
+            {
+                 "LOKALE/DATO",
+                 "TID",
+                 "ANNULLER",
+            };
 
             int? selection = ConsoleHelpers.ChooseFromListOrCancel($"REDIGER:", editSelection);
 
             if (selection == 0)
             {
+                (Moedelokale nytLokale, DateTime nyDato)? lokaleDatoResult =
                 ConsoleHelpers.PickRoomAndDate("REDIGER LOKALE & DATO:", DateTime.Today, 2, system);
-                
+
+                if (lokaleDatoResult == null)
+                {
+                    return;
+                }
+
+                Moedelokale nytLokale = lokaleDatoResult.Value.nytLokale;
+                DateTime nyDato = lokaleDatoResult.Value.nyDato;
+
+                List<Booking> bookingsValgtLokaleDato = system.GetBookingMatchesMoedelokaleDato(nytLokale.moedelokaleId, nyDato);
+
+                bookingsValgtLokaleDato.Remove(chosenBooking);
+
+                var nyTid = ConsoleHelpers.PickStartTidSlutTid(
+                    bookingsValgtLokaleDato,
+                    new TimeSpan(8, 0, 0),
+                    new TimeSpan(18, 0, 0));
+
+                if (nyTid == null)
+                {
+                    return; 
+                }
+
+                chosenBooking.moedelokale = nytLokale;
+                chosenBooking.dato = nyDato;
+                chosenBooking.startTid = nyTid.Value.startTid;
+                chosenBooking.slutTid = nyTid.Value.slutTid;
+
+                Console.Clear();
+                Console.WriteLine("BOOKING OPDATERET");
+                Console.ReadKey(true);
+                Console.Clear();
+                return;
             }
+            
             if (selection == 1)
             {
+                List<Booking> bookingValgtLokaleDato = system.GetBookingMatchesMoedelokaleDato(chosenBooking.moedelokale.moedelokaleId, chosenBooking.dato);
 
+                bookingValgtLokaleDato.Remove(chosenBooking);
+
+                var nyTid = ConsoleHelpers.PickStartTidSlutTid(
+                    bookingValgtLokaleDato,
+                    new TimeSpan(8, 0, 0),
+                    new TimeSpan(18, 0, 0));
+
+                if (nyTid == null)
+                {
+                    return;
+                }
+
+                chosenBooking.startTid = nyTid.Value.startTid;
+                chosenBooking.slutTid = nyTid.Value.slutTid;
+
+                Console.Clear();
+                Console.WriteLine("BOOKING OPDATERET");
+                Console.ReadKey(true);
+                Console.Clear();
             }
-
         }
     }
 }
