@@ -122,14 +122,14 @@ namespace KN.UI
 
             List<Booking> bookingsValgtLokaleDato = system.GetBookingMatchesMoedelokaleDato(valgtMoedelokale.moedelokaleId, valgtDato);
 
-            var tidValg = ConsoleHelpers.PickStartTidSlutTid(bookingsValgtLokaleDato, new TimeSpan(8,0,0), new TimeSpan(18,0,0));
+            var tidValg = ConsoleHelpers.PickStartTidSlutTid(bookingsValgtLokaleDato, new TimeSpan(8, 0, 0), new TimeSpan(18, 0, 0));
             if (tidValg == null)
             {
                 return;
             }
-            
+
             (TimeSpan startTid, TimeSpan slutTid) = tidValg.Value;
-            
+
             Console.Clear();
 
             string[] bookingConfirmation =
@@ -155,7 +155,7 @@ namespace KN.UI
                 Console.WriteLine("BOOKING OPRETTET");
                 Console.ReadKey(true);
 
-                return; 
+                return;
             }
             if (choiceConfirmBooking == 1)
             {
@@ -180,7 +180,7 @@ namespace KN.UI
 
             DateTime today = DateTime.Today;
 
-            DateTime rangeStart = today;   
+            DateTime rangeStart = today;
             DateTime rangeEnd = today;
 
             if (filterChoice == 0)
@@ -197,10 +197,10 @@ namespace KN.UI
                 rangeStart = today.AddDays(-daysSinceMonday).Date;
                 rangeEnd = rangeStart.AddDays(6).Date;
             }
-            
+
             List<Booking> bookings = system.GetBookings();
             List<Booking> matches = new List<Booking>();
-            
+
             foreach (Booking booking in bookings)
             {
                 bool lokaleMatch = booking.moedelokale.moedelokaleId == valgtMoedelokale.moedelokaleId;
@@ -214,11 +214,11 @@ namespace KN.UI
                     matches.Add(booking);
                 }
             }
-                        
-           
+
+
             Console.Clear();
             Console.WriteLine($"{valgtMoedelokale.navn}\n");
-            
+
             if (matches.Count == 0)
             {
                 Console.WriteLine("INGEN BOOKINGER...");
@@ -246,9 +246,9 @@ namespace KN.UI
             }
 
             while (true)
-            { 
-               List<Booking> matches = system.GetBookingMatchesForMedarbejder(valgtMedarbejder.medarbejderId);
-               string[] options = new string[matches.Count];
+            {
+                List<Booking> matches = system.GetBookingMatchesForMedarbejder(valgtMedarbejder.medarbejderId);
+                string[] options = new string[matches.Count];
 
                 for (int i = 0; i < matches.Count; i++)
                 {
@@ -315,6 +315,59 @@ namespace KN.UI
                 if (valgtMedarbejder == null) return;
                 break;
             }
+
+            List<Booking> matches = system.GetBookingMatchesForMedarbejder(valgtMedarbejder.medarbejderId);
+            string[] options = new string[matches.Count];
+
+            for (int i = 0; i < matches.Count; i++)
+            {
+                options[i] =
+
+                    $"{matches[i].medarbejder.navn}\n{matches[i].moedelokale.navn}\n{matches[i].dato:dd/MM/yyyy}\n{matches[i].startTid:hh\\:mm} - {matches[i].slutTid:hh\\:mm}";
+            }
+
+            Console.Clear();
+
+            if (matches.Count == 0)
+            {
+                Console.WriteLine("INGEN BOOKINGER...");
+                Console.ReadKey(true);
+                return;
+            }
+            else
+            {
+                int? chosenIndex = ConsoleHelpers.ChooseFromListOrCancel("VAELG BOOKING", options);
+
+                if (chosenIndex == null)
+                {
+                    return;
+                }
+
+                int idx = chosenIndex.Value;
+
+                Booking chosenBooking = matches[idx];
+            }
+
+            string[] editSelection =
+                {
+                               "LOKALE/DATO",
+                               "TID",
+                               "ANNULLER",
+                    };
+
+            int? selection = ConsoleHelpers.ChooseFromListOrCancel($"REDIGER:", editSelection);
+
+            if (selection == 0)
+            {
+                ConsoleHelpers.PickRoomAndDate("REDIGER LOKALE & DATO:", DateTime.Today, 2, system);
+                
+            }
+            if (selection == 1)
+            {
+
+            }
+
         }
     }
 }
+

@@ -342,24 +342,34 @@ namespace KN.UI
                         blocked[i] = true; 
                         break; 
                     }
-                    
                 }
             }
 
             int selectedIndex = 0;
             int startIndex = -1;
             int endIndex = -1;
+
             while (selectedIndex < blocked.Length && blocked[selectedIndex])
             {
                 selectedIndex++;
             }
+            if (selectedIndex >= blocked.Length)
+            {
+                Console.WriteLine("INGEN LEDIGE TIDER PAA DEN VALGTE DATO");
+                Console.ReadKey();
+                return null;
+            }
+
+            Console.Clear(); 
 
             while (true)
             {
-                Console.Clear();
+                Console.SetCursorPosition(0, 0);
+                
                 for (int i = 0; i < ticks.Count; i++)
                 {
                     
+
                         if (i == selectedIndex)
                         {   
                             if (i == startIndex || i == endIndex)
@@ -390,8 +400,9 @@ namespace KN.UI
                             {
                                 Console.WriteLine($" |   |{ticks[i]:hh\\:mm}  ");
                             }
-                        
                         }
+
+                    
                 }
 
                 var key = Console.ReadKey(true).Key;
@@ -469,7 +480,7 @@ namespace KN.UI
                             Console.Clear();
                             Console.WriteLine("ANDRE BOOKINGER KAN IKKE OVERLAPPES");
                             Console.ReadKey();
-
+                            Console.Clear();
                             continue;
                         }
                         else
@@ -489,6 +500,7 @@ namespace KN.UI
                         Console.Clear();
                         Console.WriteLine("SLUTTID KAN IKKE VAERE FOER STARTTID");
                         Console.ReadKey();
+                        Console.Clear();
 
                         continue;
                     }
@@ -513,6 +525,7 @@ namespace KN.UI
                         else
                         {
                             endIndex = -1;
+                            Console.Clear();
                             continue;
                         }
                     }
