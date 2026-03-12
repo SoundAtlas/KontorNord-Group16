@@ -123,6 +123,7 @@ namespace KN.UI
             var tidValg = ConsoleHelpers.PickStartTidSlutTid(bookingsValgtLokaleDato, new TimeSpan(8, 0, 0), new TimeSpan(18, 0, 0));
             if (tidValg == null)
             {
+                Console.Clear();
                 return;
             }
 
