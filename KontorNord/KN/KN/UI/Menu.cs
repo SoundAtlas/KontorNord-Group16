@@ -71,7 +71,6 @@ namespace KN.UI
 
             int idx = selectedIndex.Value;
             return medarbejdere[idx];
-
         }
 
         public static Moedelokale? MoedelokaleSelection(BookingSystem system)

@@ -65,8 +65,6 @@ namespace KN.UI
                     {
                         selected = lastIndex;
                     }
-
-
                 }
                 
                 if (key == ConsoleKey.DownArrow || key == ConsoleKey.S)
@@ -83,8 +81,6 @@ namespace KN.UI
                 {
                     return selected;
                 }
-
-                
             }
         }
 
@@ -117,7 +113,6 @@ namespace KN.UI
             Thread.Sleep(milliseconds);
             Console.Clear();
             ConsoleHelpers.FlushKeyBuffer(titleScreen);
-
         }
 
         public static (Moedelokale, DateTime)? PickRoomAndDate(string title, DateTime initialDate, int yearSpan, BookingSystem system)
@@ -138,7 +133,6 @@ namespace KN.UI
             
             while (true)
             {
-
                 Console.SetCursorPosition(0, 0);
                 Console.WriteLine((title + "\n").PadRight(50));
 
@@ -187,7 +181,6 @@ namespace KN.UI
                     {
                         activeField = lastFieldIndex;
                     }
-
                 }
 
                 if (key == ConsoleKey.RightArrow || key == ConsoleKey.D)
@@ -374,8 +367,6 @@ namespace KN.UI
                 
                 for (int i = 0; i < ticks.Count; i++)
                 {
-                    
-
                         if (i == selectedIndex)
                         {   
                             if (i == startIndex || i == endIndex)
@@ -407,8 +398,6 @@ namespace KN.UI
                                 Console.WriteLine($" |   |{ticks[i]:hh\\:mm}");
                             }
                         }
-
-                    
                 }
 
                 var key = Console.ReadKey(true).Key;
@@ -513,27 +502,7 @@ namespace KN.UI
 
                     if (startIndex != -1 && endIndex != -1)
                     {
-                        Console.Clear();
-
-                        string[] tidConfirmation =
-                        {
-                               "JA",
-                               "NEJ",
-                        };
-
-                        int? choiceConfirmTid = ConsoleHelpers.ChooseFromListOrCancel($"STARTTID: {ticks[startIndex]:hh\\:mm}\nSLUTTID: {ticks[endIndex]:hh\\:mm} \n\nBEKRAEFT?", tidConfirmation);
-                        
-                        if (choiceConfirmTid == 0)
-                        {
-
-                            return (ticks[startIndex], ticks[endIndex]);
-                        }
-                        else
-                        {
-                            endIndex = -1;
-                            Console.Clear();
-                            continue;
-                        }
+                        return (ticks[startIndex], ticks[endIndex]);
                     }
                 }
             }

@@ -39,7 +39,6 @@ namespace KN.Services
             sofieMoeller.rolle = "Projekt- og administrationsmedarbejder";
             medarbejdere.Add(sofieMoeller);
 
-
             Medarbejder amirRahimi = new Medarbejder();
             amirRahimi.medarbejderId = 2;
             amirRahimi.navn = "Amir Rahimi";
@@ -70,7 +69,6 @@ namespace KN.Services
             henrikKroell.rolle = "Direktoer";
             medarbejdere.Add(henrikKroell);
         }
-
         private void InitializeMoedelokaler()
         {
             Moedelokale lokaleA = new Moedelokale();
@@ -88,7 +86,6 @@ namespace KN.Services
             lokaleC.navn = "LOKALE C";
             moedelokaler.Add(lokaleC);
         }
-
         private void InitializeBookings()
         {
             Booking booking = new Booking();
@@ -197,7 +194,6 @@ namespace KN.Services
         {
             return bookings; 
         }
-
         public List<Booking> GetBookingMatchesForMedarbejder(int medarbejderId)
         {
             List<Booking> matches = new List<Booking>();
@@ -218,7 +214,5 @@ namespace KN.Services
             bookings.Remove(booking);
             SaveBookingsToFile();
         }
-
-        
     }
 }

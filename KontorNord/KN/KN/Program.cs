@@ -12,7 +12,6 @@ namespace KN
             BookingSystem system = new BookingSystem();
 
             Menu.MenuMain(system);
-
         }
     }
 }       
