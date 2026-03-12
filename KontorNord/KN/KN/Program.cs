@@ -1,7 +1,5 @@
-﻿using KN.Models;
-using KN.Services;
+﻿using KN.Services;
 using KN.UI;
-using System.Data;
 
 namespace KN
 {

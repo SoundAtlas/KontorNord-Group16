@@ -1,13 +1,5 @@
 ﻿using KN.Models;
 using KN.Services;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading;
-using System.Xml.Serialization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace KN.UI
 {
@@ -55,10 +47,10 @@ namespace KN.UI
 
                 else if (choice == 4)
                 {
+                    Console.Clear();
                     break;
                 }
             }
-
         }
 
         public static Medarbejder? MedarbejderSelection(BookingSystem system)
@@ -257,17 +249,22 @@ namespace KN.UI
         public static void SletBooking(BookingSystem system)
         {
             Medarbejder? valgtMedarbejder = null;
+            valgtMedarbejder = MedarbejderSelection(system);
 
-            while (true)
+            if (valgtMedarbejder == null)
             {
-                valgtMedarbejder = MedarbejderSelection(system);
-                if (valgtMedarbejder == null) return;
-                break;
+                return;
             }
 
             while (true)
             {
                 List<Booking> matches = system.GetBookingMatchesForMedarbejder(valgtMedarbejder.medarbejderId);
+
+                matches = matches
+                .OrderBy(b => b.dato)
+                .ThenBy(b => b.startTid)
+                .ToList();
+
                 string[] options = new string[matches.Count];
 
                 for (int i = 0; i < matches.Count; i++)
@@ -337,6 +334,11 @@ namespace KN.UI
             Console.Clear();
 
             List<Booking> matches = system.GetBookingMatchesForMedarbejder(valgtMedarbejder.medarbejderId);
+
+            matches = matches
+            .OrderBy(b => b.dato)
+            .ThenBy(b => b.startTid)
+            .ToList();
 
             if (matches.Count == 0)
             {
