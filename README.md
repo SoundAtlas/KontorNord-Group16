@@ -49,3 +49,12 @@ docs/  → Systemmodeller og diagrammer
 ## Projekt
  
 Udviklet som en del af **KontorNord projektet** i systemudvikling og programmering.
+
+## Projektgruppe 16
+
+- Andreas Friis Hemmer
+- Anika Fuglsang
+- Bahram Dinarzehi
+- Emmerence Steffesen
+- Fiozi Amer Reza
+- Seval Polat
