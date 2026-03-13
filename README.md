@@ -40,8 +40,9 @@ docs/  → Systemmodeller og diagrammer
 ## Sådan køres programmet
  
 1. Åbn projektet i **Visual Studio**
-2. Kør programmet
-3. Følg menuen i konsollen
+2. Åbn løsningen **KN.slnx**
+3. Kør programmet
+4. Følg menuen i konsollen
  
 ---
  
